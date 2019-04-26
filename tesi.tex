@@ -1,0 +1,94 @@
+\documentclass[12pt,a4paper,twoside,openright]{book}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{hyperref}
+\usepackage{makeidx}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage[autostyle,italian=guillemets]{csquotes}
+\usepackage[backend=biber]{biblatex}
+ \addbibresource{bibliografia-tesi.bib}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{frontespizio}
+\usepackage{fancyhdr}
+\usepackage{indentfirst}
+\usepackage{bold-extra}
+
+\usepackage{lmodern}
+
+\makeindex
+
+\newenvironment{abstract}% 
+	{\cleardoublepage%
+		\thispagestyle{empty}%
+		 \null \vfill\begin{center}%
+			\bfseries \abstractname \end{center}}% 
+	{\vfill\null}
+
+\newcommand{\fncyfront}{% 
+	\fancyhead[RO]{{\footnotesize\rightmark}} 
+	\fancyfoot[RO]{\thepage} \fancyhead[LE]{\footnotesize{\leftmark}} 
+	\fancyfoot[LE]{\thepage} 
+	\fancyhead[RE,LO]{}
+	\fancyfoot[C]{}
+	\setlength{\headheight}{14.5pt}
+\renewcommand{\headrulewidth}{0.3pt}}
+
+\newcommand{\fncymain}{%
+	\fancyhead[RO]{{\bfseries\footnotesize\rightmark}} 
+	\fancyfoot[RO]{\bfseries\thepage} 
+	\fancyhead[LE]{{\bfseries\footnotesize\leftmark}} 
+	\fancyfoot[LE]{\bfseries\thepage}
+	\fancyfoot[C]{} 
+	\setlength{\headheight}{14.5pt}
+\renewcommand{\headrulewidth}{2pt}}
+
+
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page \else\hbox{}\thispagestyle{empty}\newpage
+\if@twocolumn\hbox{}\newpage\fi\fi\fi} \makeatother
+
+\author{Daniel Casenove}
+\title{Rilevazione di disservizi nella connettività di rete}
+
+\begin{document}
+\pagestyle{fancy}
+\fncyfront
+\frontmatter
+\begin{frontespizio}
+\Margini{2.5cm}{1.5cm}{2.5cm}{1cm}
+\Istituzione{Università di Pisa}
+%\Facolta{SCIENZE MATEMATICHE, FISICHE E NATURALI}
+\Dipartimento{Informatica}
+\Corso[Laurea Triennale]{Informatica}
+\Titoletto{Tesi di Laurea Triennale}
+\Titolo{Rilevazione di disservizi nella connettività di rete}
+\Logo[2.5cm]{images/cherubino_pant541}
+\Candidato{Daniel Casenove} \Relatore{Luca Deri} 
+\Annoaccademico{2018/2019}
+\end{frontespizio}
+
+\begin{abstract}
+Placeholder 
+\end{abstract}
+\tableofcontents
+\fncymain
+\mainmatter
+
+\include{1_introduzione}
+\include{2_motivazione}
+\include{3_soluzione_proposta}
+\include{4_stato_arte}
+\include{5_validazione}
+\include{6_conclusione}
+\include{7_lavoro_futuro}
+
+\cite{placeholder}
+\backmatter
+
+\printbibliography[heading=bibintoc]
+
+
+\end{document}
