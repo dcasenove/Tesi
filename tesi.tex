@@ -2,11 +2,11 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
-\usepackage{hyperref}
+\usepackage[colorlinks=false, linktocpage=true]{hyperref}
 \usepackage{makeidx}
 \usepackage[nottoc,notlot,notlof]{tocbibind}
 \usepackage[autostyle,italian=guillemets]{csquotes}
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber,sorting=none]{biblatex}
  \addbibresource{bibliografia-tesi.bib}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -15,8 +15,10 @@
 \usepackage{fancyhdr}
 \usepackage{indentfirst}
 \usepackage{bold-extra}
-
+\usepackage{bookmark}
 \usepackage{lmodern}
+\usepackage{etoolbox}
+\patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
 
 \makeindex
 
@@ -71,21 +73,20 @@
 \end{frontespizio}
 
 \begin{abstract}
-Placeholder 
+ 
 \end{abstract}
 \tableofcontents
 \fncymain
 \mainmatter
 
 \include{1_introduzione}
-\include{2_motivazione}
+%Codice proprio
+\include{2_stato_arte}
 \include{3_soluzione_proposta}
-\include{4_stato_arte}
-\include{5_validazione}
-\include{6_conclusione}
-\include{7_lavoro_futuro}
+\include{4_validazione}
+%Lavoro futuro
+\include{5_conclusione}
 
-\cite{placeholder}
 \backmatter
 
 \printbibliography[heading=bibintoc]

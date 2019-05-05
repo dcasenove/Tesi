@@ -1,0 +1,26 @@
+%\raggedbottom
+\chapter{Stato dell'arte}
+In questo capitolo vengono presentate le motivazioni che hanno portato alla stesura di questo elaborato e le soluzioni per rilevazione di disservizi nella connettivit\`a pi\'u utilizzate.
+
+\section{Motivazione}
+Come introdotto nel precedente capitolo, lo scopo di questo lavoro \'e di fornire una soluzione per la rilevazione di disservizi in reti locali domestiche.
+Lo studio si \'e focalizzato su questo tipo di infrastrutture poich\`e esse rappresentano la maggioranza delle reti e, molto spesso, la loro configurazione \'e  lasciata ad un utente finale con poche conoscenze del campo.
+Questo pu\`o portare a prestazioni poco efficienti per quanto riguarda le connessioni Wi-Fi o all'uso di apparecchiature di scarsa qualit\`a che dimuiscono le velocit\`a di download ed upload dei dispositivi.
+In aggiunta, access point vicini, se sullo stesso canale Wi-Fi,potrebbero interferire sulla connessione locale.
+Per questo motivo, software come Kismet\cite{kismet}, possono essere utilizzati anche per scegliere un canale non sovrautilizzato oltre a monitorare il traffico Wi-Fi ed i device connessi ad una rete.
+Negli ultimi tempi, i produttori di router, stanno cercando di implementare in tutti i loro dispositivi metodi di monitoraggio per rilevare disservizi di reti.
+Questo permette agli Internet Service Providers (ISP) di fornire una diagnostica iniziale che circoscriva il problema all'interno o all'esterno della rete.
+Nel primo caso, l'utente viene informato della presenza del problema nella sua rete locale e quali dispositivi ne siano affetti, mentre nel secondo caso \'e il fornitore del servizio Internet a dover intervenire sulla propria rete per rimediare al disservizio.
+Le soluzioni attuali per il monitoraggio e la gestione di rete presentano infatti diverse problematiche quando applicate a reti piccole locali.
+\newpage
+%In particolare, sono principalmente ristrette ad apparecchiature di fascia alta, molto lontane da quelle fornite dai provider Internet ai loro utenti.
+%Le soluzioni attuali per il monitoraggio e gestione di rete, come ad esempio SNMP\cite{rfc1157}, sono infatti principalmente ristrette ad apparecchiature di fascia alta, molto lontane da quelle fornite dai provider Internet ai loro utenti.
+%In altri casi, anche alcune funzionalit\`a come il rilevamento di rete CDP sono proprietarie o funzionanti solo con apparati dello stesso produttore.
+In particolare il software \'e:
+\begin{itemize}
+	\item Ristretto ad apparecchiature di fascia alta.
+	\item Non sempre fornito di interoperabilit\`a con software di altri produttori.
+	\item Difficile da utilizzare per personale non specializzato.
+\end{itemize}
+
+Per questi motivi l'elaborato vuol fornire, dopo aver introdotto le tecniche di rilevazione di disservizi pi\`u comuni, una soluzione che possa essere utilizzata in piccole reti da utenti non esperti e su apparecchiature non professionali.
