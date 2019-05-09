@@ -24,3 +24,29 @@ In particolare il software \'e:
 \end{itemize}
 
 Per questi motivi l'elaborato vuol fornire, dopo aver introdotto le tecniche di rilevazione di disservizi pi\`u comuni, una soluzione che possa essere utilizzata in piccole reti da utenti non esperti e su apparecchiature non professionali.
+
+\section[IEEE 802.11 Distributed Coordination Function]{IEEE 802.11 \\Distributed Coordination Function}
+Nel protocollo 802.11 il meccanismo di accesso al mezzo trasmissivo \'e chiamato distributed coordination function (DCF).
+Questo metodo di accesso casuale \'e basato sul protocollo di accesso multiplo tramite rilevamento della portante con evitamento delle collisioni (CSMA/CA) in cui i terminali tentano di evitare a priori il verificarsi di collisioni durante la trasmissione.
+La ritrasmissione, in caso di collisione di pacchetti, \'e gestita tramite un algoritmo di backoff esponenziale binario che verr\`a presentato in dettaglio successivamente.
+\'E importante notare che lo standard IEEE 802.11 definisce anche un  protocollo opzionale ,chiamato point coordination function (PCF), in cui l'access point ha il compito di coordinare l'accesso al mezzo trasmissivo per evitare collisioni. 
+Questo tipo di meccanismo di accesso non verr\`a trattato per via del suo poco utilizzo.
+
+DCF descrive due tecniche per la trasmissione di pacchetti:
+\begin{itemize}
+ \item Two-way handshake: meccanismo di accesso base.
+ \item Four-way handshake: request to send/clear to send (RTS/CTS).
+\end{itemize}
+
+Il meccanismo di accesso base \'e ottenuto attraverso la trasmissione immediata di un acknowledgment positivo (ACK) da parte della stazione destinataria dopo aver ricevuto correttamente un pacchetto dal mittente.
+L'invio esplicito dell'ACK \'e richiesto poich\`e in un mezzo trasmissivo senza fili il mittente non pu\`o determinare se il pacchetto sia stato ricevuto correttamente ascoltando la sua stessa trasmissione.
+
+Il meccanismo RTS/CTS \'e opzionale e prevede che una stazione interessata all'invio di un pacchetto riservi il mezzo tramite un pacchetto request to send.
+Dopo che il destinatario riconosce questo pacchetto con un frame CTS la comunicazione continua con l'invio del pacchetto desiderato e di relativo ACK.
+
+Questo meccanismo permette l'incremento della performance del sistema grazie alla riduzione della durata di collisione che potrebbe avvenire con l'invio di lunghi pacchetti.
+Infatti, in questo caso, la collisione pu\`o solamente avvenire sul frame RTS e viene riconosciuta dalla mancanza di un frame CTS di risposta del destinatario.
+In aggiunta il meccanismo RTS/CTS implementato nello standard IEEE 802.11 \'e sviluppato per contrastare il problema dei terminali nascosti che si presenta quando un paio di stazioni mobili non riescono a rilevarsi. %Migliorare questa parte, aggiungere reference
+
+\section{Performance analysis of the IEEE 802.11 distributed coordination function}
+
