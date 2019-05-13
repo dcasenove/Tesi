@@ -46,7 +46,59 @@ Dopo che il destinatario riconosce questo pacchetto con un frame CTS la comunica
 
 Questo meccanismo permette l'incremento della performance del sistema grazie alla riduzione della durata di collisione che potrebbe avvenire con l'invio di lunghi pacchetti.
 Infatti, in questo caso, la collisione pu\`o solamente avvenire sul frame RTS e viene riconosciuta dalla mancanza di un frame CTS di risposta del destinatario.
-In aggiunta il meccanismo RTS/CTS implementato nello standard IEEE 802.11 \'e sviluppato per contrastare il problema dei terminali nascosti che si presenta quando un paio di stazioni mobili non riescono a rilevarsi. %Migliorare questa parte, aggiungere reference
+In aggiunta il meccanismo RTS/CTS implementato nello standard IEEE 802.11 \'e sviluppato per contrastare il problema dei terminali nascosti \cite{tobagi1975packet} che si presenta quando un paio di stazioni mobili non riescono a rilevarsi. %Migliorare questa parte, aggiungere reference
+
+Si presenta ora il funzionamento di DCF, come standardizzato dal protocollo 802.11.
+
+Una stazione che vuole trasmettere un pacchetto, prima di inviarlo, monitora l'attivit\`a presente sul canale.
+Se il canale risulta inattivo per una durata pari ad un distributed interframe space (DIFS), il mittente procede all'invio del frame.
+In caso contrario, se il canale \'e attualmente in uso, la stazione continua a monitorarlo finch\`e esso non risulta inattivo per un DIFS.
+A questo punto la stazione attende per un intervallo casuale di backoff per minimizzare la probabilit\`a di collisione di pacchetti con altre stazioni che hanno intenzione di trasmettere.
+Nello stesso modo, una stazione dovr\`a attendere un altro intervallo casuale per l'invio di due pacchetti consecutivi, anche se il canale risulta inattivo per un DIFS in modo da non impossessarsi del canale di trasmissione.
+L'uso del backoff casuale \'e il meccanismo che questo protocollo implementa per la collision avoidance.
+
+DCF utilizza una scala a tempo discreto di backoff per motivi di efficienza, infatti il tempo immediatamente successivo ad un DIFS viene diviso in slot ed ogni stazione pu\`o solo trasmettere all'inizio di ciascuno di questi.
+\begin{wraptable}{r}{6cm}
+%\begin{flushright}
+\centering
+\begin{tabular}{| l | l | l | l |}
+	\hline 
+	PHY & $\delta$ & CW\textsubscript{min} & CW\textsubscript{max} \\ \hline
+	FHSS & 50 & 16 & 1024 \\ \hline
+	DSSS & 20 & 32 & 1024 \\ \hline
+	IR &8 & 64 & 1024 \\ 
+	\hline
+\end{tabular}
+%\end{flushright}
+\caption{Tabella 1}
+\label{table:deltavalues}
+\end{wraptable}
+
+La dimensione dello slot, $\delta$,  \'e pari al tempo che una stazione impiega per rilevare la trasmissione di un pacchetto da parte di una qualsiasi altra stazione.
+Questo valore dipende dal tipo dal tipo del mezzo trasmissivo e viene raffigurato nella tabella \ref{table:deltavalues}.
+Come precedentemente introdotto, DCF, implementa un backoff esponenziale ed il tempo viene scelto in un range (0, $\omega$-1) dove $\omega$ \'e detta contention window.
+Questo valore dipende dal numero di trasmissioni fallite per un pacchetto, a partire da un valore pari a CW\textsubscript{min}  viene raddoppiata ad ogni trasmissione fallita fino ad un valore massimo pari a CW\textsubscript{max}=2\textsuperscript{m} CW\textsubscript{min}.
+I valori minimi e massimi della finestra sono specificati, a seconda del tipo di mezzo di trasmissione, nella tabella \ref{table:deltavalues}.
+Il contatore del backoff viene decrementato quando il canale si trova in uno stato di idle mentre \'e mantenuto inalterato quando una trasmissione viene captata sul canale.
+Infine, la stazione trasmette quando il valore del contatore raggiunge lo 0.
+
+Si presentano ora due esempi di trasmissione usando i due metodi di accesso al metodo trasmissivo presentati.
+
+Considerando due stazioni A e B che condividono lo stesso canale utilizzando il metodo base di accesso, alla fine della trasmissione B attende un DIFS e sceglie un tempo di backoff prima di trasmettere un nuovo pacchetto.
+Durante questo periodo la stazione A invia un pacchetto sul canale e, di conseguenza, il timer di backoff della stazione B rimane invariato fino a che il canale non verr\`a percepito come libero per almeno un DIFS.
+Per quanto riguarda la stazione A, essa riceve un ACK per segnalare la ricezione con successo del pacchetto da parte del destinatario.
+Il pacchetto di ACK viene inviato immediatamente trasmesso alla fine del messaggio, dopo un periodo di attesa chiamato short interframe space (SIFS).
+La durata di un SIFS \'e inferiore a quella di un DIFS, questo rende impossibile alle altre stazioni di rilevare come libero il canale fino a che non venga inviato l'ACK.
+In caso di mancata ricezione dell'ACK da parte della stazione A entro un tempo specificato ACKTimeout o della trasmissione di altri pacchetti nel canale, questa rischedula l'invio del pacchetto tramite le regole di backoff presentate.
+
+Nel meccanismo RTS/CTS una stazione che vuole trasmettere un pacchetto aspetta fino a che non rileva il canale inattivo per un DIFS, segue le regole di backoff precedentemente introdotte e trasmette un frame speciale chiamato RTS.
+Quando la stazione ricevente riconosce un frame RTS risponde, dopo un SIFS di attesa, con un frame CTS.
+Il mittente \'e autorizzato ad utilizzare il canale solo alla corretta ricezione di un CTS.
+I frame RTS e CTS contengono inoltre la lunghezza del pacchetto da trasmettere, permettendo a tutte le stazioni in ascolto di aggiornare un network allocation vector (NAV) contenente il periodo di tempo per il quale il canale sar\`a occupato.
+Questo meccanismo fornisce, quindi, una soluzione al problema dei terminali nascosti oltre a ridurre la lunghezza dei frame coinvolti nella contesa del canale.
+
+\vspace{5mm}
+\includegraphics{images/img1.pdf}
+%\input{drawing1.pdf_tex}
 
 \section{Performance analysis of the IEEE 802.11 distributed coordination function}
-

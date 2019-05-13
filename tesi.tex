@@ -18,6 +18,9 @@
 \usepackage{bookmark}
 \usepackage{lmodern}
 \usepackage{etoolbox}
+\usepackage{wrapfig}
+\usepackage{color}
+
 \patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
 
 \makeindex
@@ -28,6 +31,15 @@
 		 \null \vfill\begin{center}%
 			\bfseries \abstractname \end{center}}% 
 	{\vfill\null}
+
+\newcommand{\nrange}[4][]{%
+  #2=%
+  \ifblank{#1}{% Optional argument empty? Yes? Then omit the second number in the enumeration
+    #3, \dots ,#4%
+  }{%
+    #3, #1, \dots,#4%
+  }%
+}
 
 \newcommand{\fncyfront}{% 
 	\fancyhead[RO]{{\footnotesize\rightmark}} 
