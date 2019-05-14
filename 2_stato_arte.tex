@@ -28,7 +28,7 @@ Per questi motivi l'elaborato vuol fornire, dopo aver introdotto le tecniche di 
 \section[IEEE 802.11 Distributed Coordination Function]{IEEE 802.11 \\Distributed Coordination Function}
 Nel protocollo 802.11 il meccanismo di accesso al mezzo trasmissivo \'e chiamato distributed coordination function (DCF).
 Questo metodo di accesso casuale \'e basato sul protocollo di accesso multiplo tramite rilevamento della portante con evitamento delle collisioni (CSMA/CA) in cui i terminali tentano di evitare a priori il verificarsi di collisioni durante la trasmissione.
-La ritrasmissione, in caso di collisione di pacchetti, \'e gestita tramite un algoritmo di backoff esponenziale binario che verr\`a presentato in dettaglio successivamente.
+La ritrasmissione, in caso di collisione di pacchetti, \'e gestita tramite un algoritmo di backoff esponenziale binario (BEB) che verr\`a presentato in dettaglio successivamente.
 \'E importante notare che lo standard IEEE 802.11 definisce anche un  protocollo opzionale ,chiamato point coordination function (PCF), in cui l'access point ha il compito di coordinare l'accesso al mezzo trasmissivo per evitare collisioni. 
 Questo tipo di meccanismo di accesso non verr\`a trattato per via del suo poco utilizzo.
 
@@ -98,11 +98,99 @@ I frame RTS e CTS contengono inoltre la lunghezza del pacchetto da trasmettere, 
 Questo meccanismo fornisce, quindi, una soluzione al problema dei terminali nascosti oltre a ridurre la lunghezza dei frame coinvolti nella contesa del canale.
 
 %\vspace{5mm}
-\begin{figure}[hb]
+\begin{figure}[!htb]
 	\centering
 	\includegraphics{images/img1.pdf}
-	%\caption{DCF con metodo accesso base (sinistra) e RTS/CTS (destra)}
+	\caption{DCF con metodo accesso base (sinistra) e RTS/CTS (destra)}
 	\label{fig:dcfex}
 \end{figure}
 
-\section{Performance analysis of the IEEE 802.11 distributed coordination function}
+%\section{Performance analysis of the IEEE 802.11 distributed coordination function}
+\section{Analisi della performance IEEE 802.11 DCF}
+Uno dei primi e pi\`u rilevanti studi sulle prestazioni del meccanismo DCF \'e quello svolto da Bianchi \cite{bianchi2000performance} che propone la valutazione analitica del saturation throughput, ovvero il limite del throughput di sistema raggiunto all'aumentare del carico sul sistema stesso.
+L'analisi \'e stata effettuata con un numero fissato di stazioni ed uno stato di saturazione, ovvero assumendo che ogni stazione abbia sempre un pacchetto disponibile ad essere trasmesso.
+Diviso in due parti, lo studio improntato da Bianchi si concentra prima nel fornire una rappresentazione in catena di Markov del comportamento della singola stazione per ottenere la probabilit\`a stazionaria $\tau$ che essa trasmetta un pacchetto in uno slot di tempo casuale.
+L'approccio utilizzato fornisce una probabilit\`a indipendente dal tipo di meccanismo di accesso (base o RTS/CTS).
+Dopo aver trovato questo valore, analizzando i possibili eventi che possono accadere in un determinato slot temporale, lo studio si conclude esprimendo il throughput dei due possibili metodi di accesso al mezzo trasmissivo in funzione del valore $\tau$.
+
+$$
+\begin{cases}
+  P \{ i, k| i, k + 1\}  =1 	 &\qquad k \in (0, W_{i}-2) \ i \in (0,m) \\ 
+  P \{ 0, k| i, 0\}  =(1-p)/W_{0} 	 &\qquad k \in (0, W_{0}-1) \ i \in (0,m) \\ 
+  P \{ i, k| i-1, 0\}  =p/W_{i} 	 &\qquad k \in (0, W_{i}-1) \ i \in (1,m) \\ 
+  P \{ m, k| m, 0\}  =p/W_{m} 	 &\qquad k \in (0, W_{m}-1) \\
+\end{cases}
+$$
+
+La prima equazione tiene conto del decremento del tempo di backoff all'inizio di ogni slot di tempo mentre la seconda equazione del fatto che un nuovo pacchetto in seguito ad una trasmissione con successo inizia con un backoff stage pari a 0.
+I restanti due casi esprimono il sistema in caso di fallimento nella trasmissione.
+In particolare la terza equazione esprime come avvenga un aumento del backoff stage e la scelta di un nuovo valore di backoff iniziale nel range (0,W\textsubscript{i}).
+Infine, l'ultima equazione, modella il massimo valore m che il tempo di backoff pu\`o assumere.
+Dopo aver trovato la formula chiusa della catena di Markov si pu\`o esprimere la probabilit\`a $\tau$ che una stazione trasmetta in uno slot di tempo casuale.
+Poich\`e la trasmissione avviene quando il timer di backoff raggiunge lo 0, a prescindere dal backoff stage il valore di tau \'e pari a:
+
+
+\begin{equation}
+\tau = \frac{2(1-2p)}{(1-2p)(W+1)+pW(1-(2p)^m)}
+\end{equation}
+
+Il valore di p, ovvero della probabilit\`a di collisione, \'e pari alla probabilit\`a che una delle restanti n-1 stazioni decida di trasmettere un pacchetto.
+
+\begin{equation}
+1-(1-\tau)^{n-1}
+\end{equation}
+
+Possiamo quindi dire che 
+
+\begin{equation}
+\tau(p) = \frac{2}{1+W+pW \sum_{i=0}^{m-1}(2p)^i}
+\end{equation}
+
+Per calcolare quindi S, il throughput normalizzato, ovvero il periodo di tempo in cui il canale \'e utilizzato per trasmettere correttamente pacchetti, Bianchi ha poi definito le probabilit\`a degli eventi che possono accadere in uno slot di tempo.
+In particolare, viene identificata con P\textsubscript{tr} la probabilit\`a che ci sia almeno una trasmissione nello slot di tempo e, poich\`e ogni stazione trasmette sul canale con probabilit\`a $\tau$, si ha:
+
+\begin{equation}
+P_{tr} = 1-(1-\tau)^n
+\end{equation}
+
+La probabilit\`a P\textsubscript{s} che una trasmissione avvenga correttamente \'e quindi data dalla probabilit\`a che esattamente una stazione trasmetta condizionata dalla probabilit\`a che almeno una stazione trasmetta.
+
+\begin{equation}
+P_{s} = \frac{n\tau(1-\tau)^{n-1}}{P_{tr}} = \frac{n\tau(1-\tau)^{n-1}}{ 1-(1-\tau)^n}
+\end{equation} 
+
+Si pu\`o ora descrivere S come il rapporto
+
+\begin{equation}
+S = \frac{E[payload \ trasmesso \ in \ uno \ slot \ di \ tempo]}{E[lunghezza \ dello \ slot \ di \ tempo]}
+\end{equation}
+
+Dato che E[P] e' la dimensione media di un pacchetto, la media di informazione trasmessa correttamente in uno slot di tempo e' pari a $P_{tr}P_{s}E[P]$, poich\`e una trasmissione corretta avviene in uno slot con probabilit\`a $P_{tr}P_{s}$.
+Con probabilit\`a $1-P_{tr}$ lo slot di tempo \'e vuoto, con probabilit\`a $P_{tr}P{s}$ contiene una trasmissione con successo e con probabilit\`a $P_{tr}(1-P_{s})$ una collisione.
+L'equazione per ottenere S diventa quindi
+\begin{equation}
+S = \frac{P_{s} P_{tr} E[P]}{	(1-P_{tr})\sigma + P_{tr} P\textsubscript{s} T_{s} + P_{tr}(1-P_{s})T_{c}}
+\end{equation}
+
+In questa equazione si identifica il tempo medio in cui il canale viene visto come occupato per via di una trasmissione avvenuta con successo con $T_{s}$ ed il tempo medio in cui il canale viene visto come occupato per via di una trasmissione con collisione con $T_{c}$.
+Questi valori, necessari per il calcolo del throughput, dipendono dal tipo di meccanismo di accesso utilizzato.
+Per quanto riguarda il meccanismo di accesso base, identificando con H=$ PHY_{hdr}$ + $MAC_{hdr}$, $\delta$ il ritardo di propagazione e E[P*] la lunghezza media del pi\`u grande pacchetto coinvolto in una collisione:
+
+$$
+\begin{cases}
+T_{s}^{bas} &= H + E[P] + SIFS + \delta + ACK + DIFS + \delta \\
+T_{c}^{bas} &= H + E[P*] + DIFS + \delta \\
+\end{cases}
+$$
+
+Per il meccanismo di accesso basato su RTS/CTS i valori sono invece
+
+$$
+\begin{cases}
+\!\begin{aligned}
+T_{s}^{rts} =  &\ RTS + SIFS + \delta + CTS + SIFS + \delta + H + E[P]  \\ & + SIFS + \delta + ACK + DIFS + \delta 
+\end{aligned}
+\\
+T_{c}^{rts} = RTS + DIFS + \delta \\
+\end{cases}
+$$
