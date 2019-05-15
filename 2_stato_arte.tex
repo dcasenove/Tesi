@@ -26,7 +26,7 @@ In particolare il software \'e:
 Per questi motivi l'elaborato vuol fornire, dopo aver introdotto le tecniche di rilevazione di disservizi pi\`u comuni, una soluzione che possa essere utilizzata in piccole reti da utenti non esperti e su apparecchiature non professionali.
 
 \section[IEEE 802.11 Distributed Coordination Function]{IEEE 802.11 \\Distributed Coordination Function}
-Nel protocollo 802.11 il meccanismo di accesso al mezzo trasmissivo \'e chiamato distributed coordination function (DCF).
+Nel protocollo 802.11 il meccanismo di accesso al mezzo trasmissivo \'e chiamato distributed coordination function (DCF) \cite{ieee99}.
 Questo metodo di accesso casuale \'e basato sul protocollo di accesso multiplo tramite rilevamento della portante con evitamento delle collisioni (CSMA/CA) in cui i terminali tentano di evitare a priori il verificarsi di collisioni durante la trasmissione.
 La ritrasmissione, in caso di collisione di pacchetti, \'e gestita tramite un algoritmo di backoff esponenziale binario (BEB) che verr\`a presentato in dettaglio successivamente.
 \'E importante notare che lo standard IEEE 802.11 definisce anche un  protocollo opzionale ,chiamato point coordination function (PCF), in cui l'access point ha il compito di coordinare l'accesso al mezzo trasmissivo per evitare collisioni. 
@@ -194,3 +194,78 @@ T_{s}^{rts} =  &\ RTS + SIFS + \delta + CTS + SIFS + \delta + H + E[P]  \\ & + S
 T_{c}^{rts} = RTS + DIFS + \delta \\
 \end{cases}
 $$
+
+Il modello presentato da Bianchi si \'e rivelato, dopo validazione tramite simulazione, efficace per rappresentare i diversi schemi di accesso utilizzati da DCF: in particolare quello base, RTS/CTS ed una combinazione dei due che non \'e stata riportata.
+I risultati ottenuti dal modello mostrano che la performance del metodo di accesso base dipende fortemente sui parametri del sistema, principalmente il numero di stazioni connessi ed i parametri minimi della finestra di contesa.
+Questi ultimi sono per\`o meno influenti sul metodo RTS/CTS che si presenta come la migliore opzione di accesso al metodo per reti di grandi dimensioni per via della possibilit\`a di arginare il problema dei terminali nascosti ed un minore tempo impiegato durante la collisione quando pi\`u stazioni trasmettono contemporaneamente.
+
+\newpage
+
+\section{TCP e DCF, analisi della performance }
+
+Lo studio condotto da Wu et al \cite{wu2002performance} propone un modello basato su quello di Bianchi che tiene per\`o conto del limite di tentativi di ritrasmissione di un frame.
+In aggiunta, viene proposto un miglioramento allo standard 802.11 con l'introduzione di DCF+.
+Questo meccanismo di accesso al metodo di trasmessione \'e introdotto per cercare di sopperire alle problematiche di performance di cui protocolli di livello trasporto soffrono in reti wireless \cite{xylomenos1999tcp}.
+In particolare, lo studio si concentra sul risolvere la contesa per il canale di trasmissione che avviene durante lo scambio di dati ed ACK TCP, meccanismo che potrebbe causare collisioni e un degrado delle prestazioni.
+La soluzione proposta \'e inoltre compatibile con DCF definito dallo standard 802.11, questo vuol dire che in una stessa rete possono coesistere e comunicare stazioni che supportano due metodi di accesso al mezzo trasmissivo diversi.
+
+Il principale cambiamento che DCF+ apporta \'e quello di utilizzare il MAC ACK specificato nello standard 802.11 come un RTS.
+Questo \'e in linea con l'implementazione di DCF che prevede l'invio di un ACK in caso di una trasmissione ricevuta con succeso e permette una retrocompatibilit\`a con stazioni che non implementano DCF+.
+
+In figura si mostra un esempio del funzionamento di DCF+ assumendo che la stazione destinatario debba, oltre a ricevere un frame dal mittente, anche inviargli un pacchetto dati.
+Successivamente alla corretta ricezione del frame dati il destinatario procede ad inviare un ACK al mittente che, come gi\`a introdotto, viene considerato come un RTS ed utilizzato per inizializzare anche il NAV delle altre stazioni in ascolto. 
+Come da implementazione del DCF il mittente risponde a questo frame con un CTS ed inizializza i valori del NAV pari alla lunghezza del frame di dati che deve ricevere.
+L'operazione si conclude con l'invio del pacchetto ed un normale ACK di riscontro.
+Per quanto riguarda il metodo di accesso RTS/CTS la procedura differisce solo per l'aggiunta dei due pacchetti iniziali che permettono alle stazioni di impossessarsi del mezzo trasmissivo.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/img2.pdf}
+	\caption{DCF+ con metodo accesso base (sinistra) e RTS/CTS (destra)}
+	\label{fig:dcf+ex}
+\end{figure}
+
+Il funzionamento di DCF+ come presentato si basa, per\`o, su due assunzioni:
+
+\begin{itemize}
+	\item La stazione mittente che riceve l'ACK sia in grado di determinare, in base al campo della durata presente nel frame, se il destinatario ha un pacchetto dati pronto per l'invio.
+	\item Le stazioni, tramite campi nel frame dati e record locali, siano in 		grado di determinare se il destinatario supporti DCF+.
+\end{itemize}
+
+Il modello utilizzato da Wu et al per l'analisi di questo metodo di accesso si basa su una estensione del modello proposto da Bianchi.
+In particolare, a parit\`a di assunzioni, viene proposta una catena di Markov in cui vengono considerati gli effetti del limite di ritrasmissioni di frame:
+
+$$
+\begin{cases}
+  P \{ i, k| i, k + 1\}  =1 	 &\qquad k \in (0, W_{i}-2) \ i \in (0,m) \\ 
+  P \{ 0, k| i, 0\}  =(1-p)/W_{0} 	 &\qquad k \in (0, W_{0}-1) \ i \in (0,m) \\ 
+  P \{ i, k| i-1, 0\}  =p/W_{i} 	 &\qquad k \in (0, W_{i}-1) \ i \in (1,m) \\ 
+  P \{ 0, k| m, 0\}  =p/W_{0} 	 &\qquad k \in (0, W_{m}-1) \\
+\end{cases}
+$$
+
+%b0,0
+
+Questa differenza si ripercuote anche sui valori di $\tau$ e $p$.
+In aggiunta, poich\`e viene considerato anche l'effetto timeout dell'ACK, il modello differir\`a da quello proposto da Bianchi anche nei valori di $T^{bas}$ e $T^{rts}$ che saranno, rispettivamente:
+
+$$
+\begin{cases}
+T_{s}^{bas} &= H + E[P] + SIFS + \delta + ACK + DIFS + \delta \\
+T_{c}^{bas} &= DIFS + H + E[P*] + SIFS + ACK \\
+\end{cases}
+$$
+
+$$
+\begin{cases}
+\!\begin{aligned}
+T_{s}^{rts} =  &\ RTS + SIFS + \delta + CTS + SIFS + \delta + H + E[P]  \\ & + SIFS + \delta + ACK + DIFS + \delta 
+\end{aligned}
+\\
+T_{c}^{rts} = DIFS + RTS + SIFS + CTS \\
+\end{cases}
+$$
+
+Il modello analitico sviluppato da questo studio si \'e dimostrato pi\`u accurato rispetto a quello proposto da \cite{bianchi2000performance} in seguito alle simulazioni svolte.
+Quest ultimo infatti sovrastima il throughput poich\`e non considera il limite di ritrasmissioni ed il timeout dovuto all'ACK.
+Le prestazioni di DCF+ sono poi state comparate a quelle di DCF utilizzando il modello presentato, evidenziando un miglioramento in metriche quali: goodput, fairness nell'utilizzo del mezzo trasmissivo e delay a livello MAC.
