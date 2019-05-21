@@ -269,3 +269,67 @@ $$
 Il modello analitico sviluppato da questo studio si \'e dimostrato pi\`u accurato rispetto a quello proposto da \cite{bianchi2000performance} in seguito alle simulazioni svolte.
 Quest ultimo infatti sovrastima il throughput poich\`e non considera il limite di ritrasmissioni ed il timeout dovuto all'ACK.
 Le prestazioni di DCF+ sono poi state comparate a quelle di DCF utilizzando il modello presentato, evidenziando un miglioramento in metriche quali: goodput, fairness nell'utilizzo del mezzo trasmissivo e delay a livello MAC.
+
+\newpage
+\section{IEEE 802.11E EDCF}
+Fino allo standard IEEE 802.11e \cite{ieee05} il modello della WLAN pu\`o essere visto come una versione wireless di Ethernet che supporta un servizio best effort.
+L'aumento dei servizi offerti in streaming e VoIP ha per\`o reso necessaria l'implementazione di meccanismi per il supporto quality of service (QoS), ovvero la possibilit\a` di fornire una diversa priorit\`a a diverse applicazioni o utenti.
+Nel principio 802.11 non fornisce questo supporto di differenziare frame in base a priorit\`a, tutto ci\`o che fornisce DCF \'e un accesso al canale in contesa con uguale probabilit\`a per tutte le stazioni.
+Lo standard 802.11e definisce due miglioramenti al fine di supportare QoS mediamente l'introduzione di Enhanced Distributed Coordination Function (EDCF) e Hybrid Coordination Function (HCF).
+In EDCF vengono implementate delle categorie di traffico (TC) a cui vengono associate diverse priorit\`a come mostrato nella tabella \ref{table:catvalues}.
+
+%\begin{flushright}
+\begin{table}[h]
+%\centering
+\begin{tabular}{| l | l | l | l |}
+	\hline 
+	Priorit\`a  & 802.1D & Categoria & Descrizione \\ \hline
+	Bassa & 1 & AC\textunderscore BK & Background \\ \hline
+     & 2 & AC\textunderscore BK & Background \\ \hline
+	 & 0 & AC\textunderscore BE & Best Effort \\ \hline
+	 & 3 & AC\textunderscore BK & Best Effort \\ \hline
+	 & 4 & AC\textunderscore VI & Video \\ \hline
+	 & 5 & AC\textunderscore VI & Video \\ \hline
+	 & 6 & AC\textunderscore VO & Voce \\ \hline
+	Alta & 7 & AC\textunderscore VO & Voce \\ \hline
+\end{tabular}
+%\end{flushright}
+\centering
+\caption{Tabella categorie accesso}
+\label{table:catvalues}
+\end{table}
+
+I frame delle stazioni vengono quindi divisi in diverse istanze di backoff, ognuna con dei parametri specifici alla categoria di traffico \ref{fig:edcf}.
+Nel periodo di contesa per il mezzo trasmissivo, ogni categoria di traffico cerca di accedere ad una transmission opportunity (TXOP) ed inizia un periodo di backoff indipendente dopo che il canale \'e inattivo per almeno un Arbitration Interframe Space (AIFS).
+Se durante il periodo di backoff il canale torna ad essere utilizzato, come per DCF, EDCF aspetta che il canale torni ad essere libero prima di diminuire il valore di backoff.
+Per via delle categorie di traffico, una singola stazione pu\`o implementare fino ad otto code interne realizzate come stazioni virtuali.
+Se pi\`u di una stazione raggiunge il valore 0 nel backoff, uno scheduler ha il compito di evitare una collisione tra le due stazioni virtuali dando la TXOP alla stazione con priorit\`a pi\`u alta.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/img3.pdf}
+	\caption{DCF (sinistra) e EDCF con otto backoff virtuali (destra)}
+	\label{fig:edcf}
+\end{figure}
+
+Durante l'intervallo TXOP, definito da un tempo di inizio ed una massima durata, una stazione ha il diritto di trasmettere sul canale.
+L'intervallo TXOP viene allocato tramite una contesa (EDCF-TXOP) o assegnato attraverso HCF (polled-TXOP).
+La durata dell'intervallo \'e definita dai beacon frames dell'AP per quanto riguarda EDCF-TXOP e specificato nel frame del poll per quanto riguarda HCF.
+
+Diversi studi sono stati improntati sulla performance di EDCF, in particolare \cite{mangold2002ieee} dopo aver simulato l'uso di EDCF ne evidenzia una soluzione efficiente per l'implementazione QoS su reti WLAN e la retrocompatibilit\`a con stazioni che non implementano questo metodo di accesso.
+Con l'opportuna scelta di parametri, stazioni EDCF riescono infatti ad avere priorit\`a sul canale rispetto a stazioni che implementano DCF.
+
+Xiao \cite{xiao2004performance} ha successivamente fornito un modello analitico, seguendo le orme di Bianchi, di EDCF.
+Utilizzando metriche di backoff quali: dimensione iniziale della finestra, limite di ritrasmissioni e il fattore di incremento della finestra di backoff i risultati ottenuti dallo studio mostrano come una categoria di traffico possa rubare banda ad un altra categoria in caso questa aumenti il valore delle suddette metriche.
+In aggiunta, viene suggerita una ridimensione del limite di ritrasmissioni per traffico di tipo video per aumentare throughput e migliorare il delay.
+
+\newpage
+
+
+\section{IEEE 802.11N e 802.11AC}
+
+Attualmente la maggior parte dei router in commercio ed utilizzati in reti locali sono conformi allo standard 802.11n ed, in particolare, a quello 802.11ac.
+Il primo, con l'obiettivo di aumentare il throughput degli standard precedenti, fornisce supporto per frame aggregation e multiple-input and multiple-output (MIMO).
+Come suggerisce il nome, il frame aggregation permette ad un trasmettitore di inviare pi\`u di un frame in una singola trasmissione.
+Questa funzionalita, come studiato da  \cite{skordoulis2008ieee}, si rivela molto efficace per l'aumento del throughput della rete e per la riduzione del ritardo di trasmissione.
+La tecnologia MIMO
