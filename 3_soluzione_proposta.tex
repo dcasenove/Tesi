@@ -1,2 +1,242 @@
 \chapter{Soluzione proposta}
 In questo capitolo viene presentata la soluzione proposta per la rilevazione di disservizi nella connettivit\`a di reti locali.
+Si analizza brevemente l'architettura del software sviluppato per poi fornirne una descrizione dettagliata della sua implementazione e del software utilizzato nello sviluppo.
+
+\section{Architettura}
+L'architettura della soluzione proposta \'e principalmente suddivisa in due parti come mostrato in figura: %FIGURA
+\begin{itemize}
+
+\item una libreria che implementa un'operazione di ARP \cite{rfc826} scan, utilizzata per fornire una metrica del round-trip time (RTT) ed associare ad indirizzi IPv4 nella rete locale i rispettivi indirizzi MAC.
+Bench\`e l'utilizzo di questa libreria sia facoltativo, nei capitoli successivi si mostrer\`a come i risultati ottenuti dall'operazione di ARP scan migliorino l'accuratezza della ricostruzione della topologia Wi-Fi.
+\item una libreria che, dopo aver catturato pacchetti di traffico di rete ed ottenuto i risultati dell' ARP scan, analizza i frame ricevuti e li utilizza per ricostruire una topologia della rete Wi-Fi fornendo valori di bont\`a del segnale.
+Questa libreria \'e in grado di ricostruire topologie di reti sia in modalit\`a di cattura attiva o da file di cattura.
+\end{itemize}
+
+Le operazioni di cattura di pacchetti in entrambe le librerie sviluppate sono effettuate utilizzando l'API Pcap \cite{pcap}.
+In particolare, nella libreria di ARP scanning vengono catturati frame di tipo Ethernet II mentre nella libreria per la ricostruzione della topologia di una rete i frame catturati sono di tipo 802.11.
+%Perche'
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/img4.pdf}
+	\caption{Architettura soluzione proposta}
+	\label{fig:solproposta}
+\end{figure}
+
+
+\section{Implementazione}
+Si presentano brevemente, prima dei dettagli implementativi della libreria per la ricostruzione topologica della rete, il funzionamento della libreria utilizzata per la cattura dei pacchetti Pcap e quella implementata per effettuare ARP scanning.
+\subsection{Pcap}
+
+Sviluppata da Tcpdump, libpcap  \'e una libreria scritta in linguaggio C che permette la cattura ed il filtraggio di pacchetti di rete.
+La scelta di questa libreria si \'e basata su tre principali aspetti:
+\begin{itemize}
+	\item Facilit\`a d'uso: libpcap offre astrazioni ad alto livello per la cattura ed il filtraggio di pacchetti di rete.
+	\item Filtraggio dei pacchetti: mediante la compilazione di un filter, \'e possibile catturare solo i pacchetti di rete di interesse per l'applicazione.  
+	\item Compatibilit\`a: la libreria, oltre ad essere disponibile per la maggior parte dei sistemi operativi moderni, presenta numerosi wrapper per essere integrata in linguaggi di programmazione diversi dal C.
+\end{itemize}
+Di seguito si descrivono i passi necessari ad effettuare una cattura utilizzando libpcap:
+\begin{enumerate}
+	\item Scelta dell'interfaccia da utilizzare per la cattura.
+	\item Inizializzazione dell'interfaccia e dei parametri della sessione.
+	\item Creazione e compilazione del filtro da utilizzare per catturare i pacchetti desiderati. 
+	\item Ciclo di ascolto in cui vengono analizzati, uno ad uno, i pacchetti catturati.
+	\item Chiusura della sessione di cattura.
+\end{enumerate}
+
+%\newpage
+
+\subsection{ARP Scan}
+
+La libreria di ARP scan sviluppata permette la scoperta di tutti i dispositivi all'interno della rete locale.
+Questa operazione viene effettuata inviando un numero di pacchetti ARP ad ogni possibile indirizzo IPv4 presente nella sottorete per poi, utilizzando libpcap, riceverne eventuali riscontri.
+
+Il risultato ottenuto \'e un'associazione tra indirizzo IP ed indirizzo media access control (MAC), un indirizzo fisico univoco assegnato ad ogni scheda di rete dal proprio produttore.
+L'indirizzo MAC cos\`i ottenuto verr\`a poi utilizzato per fornire una maggiore accuratezza nella ricostruzione della topologia Wi-Fi della rete locale in esame.
+
+Sebbene questo sia il motivo principale di implementazione della libreria, \'e inoltre possibile ricavare una misura del round-trip time verso ogni dispositivo connesso alla rete, in modo analogo al ping attraverso richieste ICMP.
+A differenza di quest ultimo che pu\`o essere ignorato da alcuni tipi di dispositivi, utilizzando l'ARP ping con un numero di pacchetti appropriato \'e possibile ricevere riscontro da tutti i dispositivi attualmente connessi alla rete locale.
+In particolare, i dispositivi che tendono ad ignorare questo tipo di richieste sono quelli di tipo mobile come smartphone e tablet nei momenti di non utilizzo da parte dell'utente.
+
+Bench\`e ci siano gi\`a diverse implementazioni funzionanti per i sistemi operativi pi\`u utilizzati, si \'e deciso di sviluppare una libreria basilare che svolga solo le operazioni necessarie per la ricostruzione topologica della rete.
+Si \'e cercato  in questo modo di limitare l'utilizzo di risorse e fornire una soluzione la cui implementazione \'e indipendente dal sistema operativo e basata solamente sull'uso di libpcap.
+
+\newpage
+
+%La libreria \'e stata scritta utilizzando il linguaggio di programmazione C++  
+
+%ARP
+%Pcap
+%monitor mode, svantaggi
+%Tipi di messaggi che filtriamo
+%MAC header
+%Tipi op e tipi header
+%Euristica
+
+%ascolto Attivo / ascolto passivo
+\subsection{WiFi-Topology}
+Dopo aver introdotto nelle sezioni precedenti una vista dell'architettura, purch\`e basilare, e le librerie fondamentali per il funzionamento della soluzione proposta si discute ora l'implementazione della principale libreria sviluppata durante il tirocinio.
+
+La ricostruzione della topologia Wi-Fi delle reti viene effettuata attraverso l'analisi del traffico originato dalle stazioni presenti nelle vicinanze del dispositivo su cui il software \'e in esecuzione.
+
+Questo tipo di cattura, come descritto precedemente, \'e effettuata utilizzando la libreria libpcap che permette di utilizzare un'interfaccia di tipo Wi-Fi in una particolare modalit\`a, chiamata monitor mode, di cui si espone di seguito il funzionamento.
+
+\subsubsection{Monitor mode}
+La cattura in monitor mode, o RFMON (Radio Frequency MONitor), permette ad una interfaccia di rete wireless di catturare tutto il traffico passante per un canale Wi-Fi.
+
+In questa modalit\`a una scheda di rete non \'e associata ad alcun access point o rete ad-hoc e si pone in uno stato di ascolto in maniera completamente trasparente ad altri dispositivi wireless presenti nelle vicinanze.
+Per effettuare ci\`o non vengono rispettati i normali comportamenti di una stazione operante con il protocollo 802.11, come ad esempio l'invio di ACK come descritto nel secondo capitolo.
+Di conseguenza, in questa modalit\`a, il dispositivo perde la possibilit\`a di trasmettere dati ed il suo utilizzo \'e ristretto ad un singolo canale wireless.
+Un'altra limitazione in questo tipo di cattura riguarda il mancato controllo di errori nei pacchetti catturati, effettuato normalmente con un controllo di ridondanza ciclico (CRC).
+
+Nonostante gli svantaggi elencati, questo tipo di modalit\`a trova molto utilizzo nella progrettazione di reti wireless, ad esempio per la scelta di un canale poco utilizzato al fine di diminuire interferenze tra stazioni, o nel cracking di reti protette con WEP .
+
+Nello sviluppo della libreria questa modalit\`a \'e stata utilizzata per catturare diversi tipi di frame 802.11 trasmessi dai dispositivi nelle vicinanze.
+Analizzando questo tipo di dati ed i valori di potenze di segnale forniti dal radiotap header \'e stato poi sviluppato un algoritmo per la ricostruzione della topologia delle reti Wi-Fi.
+Per fornire una corretta analisi il controllo di ridondanza ciclico per i frame ricevuti  \'e stato integrato nella libreria sviluppata, in modo da poter evitare eventuali incoerenze tra la topologia ricostruita e quella effettiva.
+In aggiunta, poich\`e la modalit\`a monitor dissocia la scheda di rete da un access point e cattura tutto il traffico passante per un canale, la libreria sviluppata non si limita a ricostruire una particolare rete di cui si \'e interessati ma fornisce una visione di tutte quelle nelle vicinanze.
+Per sopperire all'impossibilit\`a di ascoltare su pi\`u di un canale si \'e fatto uso di uno script per effettuare channel hopping, in modo da poter catturare traffico per qualche secondo su ciascun canale.
+
+Il compromesso principale dell'uso della monitor mode resta quello di dover dedicare completamente un'interfaccia Wi-Fi alla cattura dei frame dissociandola dalla rete locale che si vuole monitorare.
+Per questo motivo, su dispositivi dotati di una sola scheda di rete, non \'e possibile mantenere costantemente attiva la cattura perdendo quindi la possibilit\`a di assistere a cambi nella topologia di rete in tempo reale. 
+Un recente studio \cite{zanetti2010non} ha evidenziato come sia possibile virtualizzare, senza perdita di prestazioni, interfacce per la cattura di traffico in modalit\`a promiscua o, come in questo caso, in monitor mode.
+
+Nella prossime sezioni vengono introdotti in dettaglio i frame catturati in questa modalit\`a e come essi sono utilizzati per la ricostruzione della topologia della rete.
+
+\subsubsection{MAC Frame}
+
+Prima di mostrare come avviene l'analisi del traffico si introduce la struttura generale dei frame catturati tramite monitor mode ed i tipi rilevanti al funzionamento della libreria.
+Nei protocolli di rete wireless 802.11 un MAC frame, rappresentato in figura \ref{fig:macframe}, \'e composto da campi comuni a tutti i tipi di frame e da campi specifici ad alcuni di essi.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/img5.pdf}
+	\caption{MAC frame}
+	\label{fig:macframe}
+\end{figure}
+
+Un frame 802.11 contiene quindi un MAC header di lunghezza pari a 34 byte, un body di lunghezza variabile in base al tipo di frame catturato ed infine un campo di 4 byte per il controllo degli errori.
+
+Di seguito si fornisce una breve descrizione di tutti i campi presenti nel MAC header, in particolare di quelli utilizzati durante l'implementazione della libreria:
+
+\newpage
+
+\begin{itemize}
+	\item Frame Control: 2 byte che forniscono informazioni sul tipo del frame.
+	\item Duration/ID: 2 byte che indicano alle stazioni la durata della trasmessione e viene usato per inizializzare il valore del NAV introdotto nel secondo capitolo.
+	\item Address 1-2-3-4: 6 ottetti che identificano unicamente un dispositivo tramite   indirizzo MAC.
+	\item Sequence Control: diviso in due campi di 12 e 4 bit che indicano, rispettivamente, il numero di sequenza ed il numero del frammento del pacchetto.
+	\item QoS Control: 2 byte che identificano i parametri QoS in un frame di dati.
+	\item HT Control: 2 byte aggiunti dallo standard 802.11n.
+	\item Frame Body: campo di lunghezza e tipo variabile, payload del frame.
+	\item FCS: 4 byte di frame check sequence, un codice di rilevazione di errore.
+\end{itemize}
+
+I campi interessanti per la ricostruzione della topologia di una rete includono il frame control, gli indirizzi MAC, il body del frame ed il FCS.
+In particolare, nella figura \ref{fig:framecontrolfields}, possiamo osservare come il frame control sia suddiviso in 11 sottocampi.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/img6.pdf}
+	\caption{Frame Control Fields}
+	\label{fig:framecontrolfields}
+\end{figure}
+
+Il primo campo, protocol version, indica la versione del protocollo 802.11 in uso dal frame ed \'e sempre pari a 0 poich\`e attualmente esiste una sola versione di questo protocollo.
+
+Il secondo e terzo campo del frame control indicano invece il tipo e sottotipo del frame ricevuto.Questo tipo di informazione \'e fondamentale per una corretta analisi poich\`e a diversi tipi e sottotipi di frame corrispondono diversi campi nel frame body.
+
+Data la lunghezza pari a 2 bit, un frame nello standard 802.11 pu\`o essere suddiviso in quattro categorie di tipo diverse, che a loro volta possono contenere sedici sottocategorie codificate con 4 bit:
+\begin{itemize}
+	\item 00- Management Frame: forniscono informazioni sullo stato della rete e sono utilizzati per la connessione e disconnessione di dispositivi.
+	\item 01- Control Frame: assistono la trasmissione di data frame e per amministrare l'accesso al mezzo al mezzo trasmissivo.
+	\item 10- Data Frame: contengono dati di protocolli di livello superiore all'interno del loro body.
+	\item 11- Reserved: tipo di frame riservato e non utilizzato nello standard 802.11.
+\end{itemize}
+
+L'utilizzo e il tipo di analisi effettuata su questi tipi di frame ed i loro sottotipi verr\`a introdotto in apposite sezioni.
+
+I successivi due campi del frame control, To DS e From DS, sono di particolare importanza per lo studio effettuato sulla ricostruzione della topologia di rete.
+Questi due bit possono essere utilizzati per determinare quando un frame \'e immesso nel mezzo trasmissivo wireless e quando, invece, ne esce.
+
+Di seguito si evidenziano i possibili valori di verit\`a dei due campi:
+
+\begin{itemize}
+	\item To DS=0, From DS=0 : il frame non deve lasciare il mezzo trasmissivo, valore generalmente associato a tipi di frame come: management e control.
+	\item To DS=0, From DS=1 : il frame proviene da un access point e sta entrando nel mezzo trasmissivo wireless.
+	\item To DS=1, From DS=0 : il frame proviene da un client e sta uscendo dal mezzo trasmissivo wireless.
+	\item To DS=1, From DS=1 : il frame \'e destinato ad un'altra rete wireless.
+\end{itemize}
+
+Accoppiando questo tipo di analisi del mezzo trasmissivo con i valori di segnale ottenuti tramite Radiotap \'e possibile rilevare anche eventuali dispositivi connessi ad un access point via cavo, purch\`e il traffico analizzato contenga un cambio di mezzo trasmissivo.
+
+Un esempio, che sar\`a discusso anche nel prossimo capitolo, potrebbe essere quello di un router collegato via cavo ad un access point ed un numero di dispositivi connessi in Wi-Fi a quest'ultimo.
+
+\newpage
+
+\subsubsection{MAC Address}
+
+Un MAC address \'e un identificatore unico associato ad un'interfaccia di rete dal proprio costruttore e viene utilizzato nel protocollo 802.11 per l'instradamento dei frame.
+L'indirizzo \'e formato da una struttura di 48 bit divisa in 6 ottetti, come mostrato in figura \ref{fig:macaddress}.
+%Guidelines for Use of Extended Unique Identifier (EUI), Organizationally Unique Identifier (OUI), and Company ID
+Per mantenere l'unicit\`tra tutte le schede di rete prodotte \'e stato introdotto uno standard, chiamato EUI-48 e gestito dalla IEEE, che divide l'indirizzo MAC in due parti:
+\begin{itemize}
+	\item Organisationally Unique Identifier (OUI): identifica unicamente un produttore di schede di rete ed assegnato dalla IEEE.
+	\item Network Interface Controller (NIC): identifica unicamente una determinata scheda di rete e viene assegnata dal prodottore.
+\end{itemize}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/img7.pdf}
+	\caption{Mac Address}
+	\label{fig:macaddress}
+\end{figure}
+
+In aggiunta, un indirizzo MAC pu\`o essere universalmente (UAA) o localmente (LAA) assegnato.
+Questa diversificazione viene effettuata attraverso il valore del secondo bit meno signficativo del primo ottetto.
+Per quanto riguarda gli indirizzi UAA, questo bit viene posto a 0 ed il valore del primo ottetto \'e pari a quello del OUI.
+Al contrario, un valore del bit pari ad 1 identifica un indirizzo LAA che viene generalmente assegnato da eventuali amministratori di rete.
+
+La differenziazione del tipo di trasmissione in unicast e multicast avviene in maniera simile, in questo caso l'identificazione avviene mediante il bit meno significativo del primo ottetto.
+
+Un valore pari a 0 equivale ad una trasmissione unicast mentre un valore pari ad 1 una trasmissione di tipo multicast.
+Infine, l'indirizzo di broadcast \'e ottenuto ponendo un valore pari ad 1 ad ogni bit dell'indirizzo MAC.
+
+Come visto precedentemente, un MAC header \'e costituito da quattro indirizzi MAC il cui valore e significato varia in base al tipo di frame ed ai valori To DS e From DS.
+Gli indirizzi possono essere dei seguenti tipi:
+\begin{itemize}
+	\item Receiver Address (RA): indirizzo della stazione che riceve il frame.
+	\item Transmitter Address (TA): indirizzo della stazione che trasmette il frame.
+	\item Basic Service Set Identifier (BSSID): indirizzo dell'access point della rete.
+	\item Destination Address (DA): indirizzo di destinazione finale del frame.
+	\item Source Address (SA): indirizzo sorgente del frame.
+\end{itemize}
+
+Nella figura \ref{table:addressvalue} si mostrano le varie combinazioni che gli indirizzi MAC possono rappresentare in base ai valori presenti nel frame control.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{| l | l | l | l | l | l |}
+	\hline 
+	To DS  & From DS & Address 1 & Address 2 & Address 3 & Address 4\\ \hline
+	 0 & 0 & RA=DA & TA=SA & BSSID & N/A \\ \hline
+     0 & 1 & RA=DA & TA=BSSID & SA & N/A\\ \hline
+	 1 & 0 & RA=BSSID & TA=SA & DA & N/A\\ \hline
+	 1 & 1 & RA & TA & DA & SA\\ \hline
+\end{tabular}
+%\end{flushright}
+\centering
+\caption{Tabella uso indirizzi MAC }
+\label{table:addressvalue}
+\end{table}
+
+%Aggiungere ref
+%Accennare qui indirizzo locale repeater?
+
+\newpage
+
+\subsubsection{Management Frame}
+\subsubsection{Control Frame}
+\subsubsection{Data Frame}
+\subsubsection{Frames utilizzati}
+\subsubsection{Analisi ed euristica}

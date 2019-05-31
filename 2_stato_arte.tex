@@ -332,4 +332,53 @@ Attualmente la maggior parte dei router in commercio ed utilizzati in reti local
 Il primo, con l'obiettivo di aumentare il throughput degli standard precedenti, fornisce supporto per frame aggregation e multiple-input and multiple-output (MIMO).
 Come suggerisce il nome, il frame aggregation permette ad un trasmettitore di inviare pi\`u di un frame in una singola trasmissione.
 Questa funzionalita, come studiato da  \cite{skordoulis2008ieee}, si rivela molto efficace per l'aumento del throughput della rete e per la riduzione del ritardo di trasmissione.
-La tecnologia MIMO
+La tecnologia MIMO fa utilizzo di una moltitudine di antenne in ricezione ed invio per trasmettere simultaneamente pi\`u stream di dati utilizzando propagazione a pi\`u vie.
+Il successivo standard 802.11ac, utilizzato maggiormente nella realizzazione del tirocinio, estende MIMO per permettere un uso multi utente, chiamato  MU-MIMO.
+
+\section{Radiotap}
+
+Un header radiotap \'e un meccanismo che viene utilizzato per aggiungere informazioni ad un frame 802.11 al momento della sua cattura.
+Pur non facendo parte in alcun modo di pacchetti 802.11 l'importanza delle metriche fornite ed il supporto ai pi\`u utilizzati sistemi operativi lo rendono 
+uno standard per la ricezione di frame 802.11.
+L'header radiotap viene aggiunto al frame catturato dal device di rete, o dal suo driver, e contiene quindi informazioni fornite dalla particolare stazione che riceve e non di quella che trasmette.
+
+Si elencano ora alcuni dei campi presenti nel radiotap header, in particolare quelli utilizzati per lo sviluppo della soluzione proposta dal tirocinio:
+
+\begin{itemize}
+	\item Antenna: antenna in ricezione o tramissione utilizzata per il pacchetto.
+	\item Channel: frequenza del canale utilizzato per trasmettere il pacchetto.
+	\item Antenna Signal: potenza del segnale in ricezione all'antenna.
+	\item Antenna Noise: rumore di sottofondo in ricezione all'antenna.
+	\item Timestamp: l'istante di tempo in cui \'e stato ricevuto il pacchetto.
+\end{itemize}
+
+In particolare con l'uso di queste metriche, oltre ad identificare su quale canale un AP stia utilizzando per le proprie trasmissioni, si pu\`o fornire un valore riguardante la bont\`a del segnale Wi-Fi.
+
+La differenza tra antenna signal ed antenna noise fornisce, infatti, un parametro chiamato Signal-to-Noise-Ratio (SNR) che viene per classificare la qualit\`a del segnale.
+In generale i valori del SNR si possono cos\`i catalogare:
+
+\begin{itemize}
+	\item >40dB: segnale eccellente, massima velocit\`a.
+	\item 25db-40db: segnale molto buono, ottima velocit\`a.
+	\item 15db-25db: segnale basso, buona velocit\`a.
+	\item 10db-15db: segnale molto basso, bassa velocit\`a.
+	\item 5db-10db: nessun segnale.
+\end{itemize}
+
+Avere un SNR accettabile per ogni dispositivo connesso alla rete \'e fondamentale per la performance generale, poich\`e uno scarso segnale contribuisce fortemente all'aumentare del numero di ritrasmissioni e quindi una diminuzione del throughput del sistema Wi-Fi.
+
+\section{Software di monitoraggio Wi-Fi}
+
+I metodi di accesso al mezzo trasmissivo e le metriche per misurare la bont\`a del segnale presentati in questo capitolo sono alla base del funzionamento dei software pi\`u utilizzati per il monitoraggio di reti Wi-Fi.
+%Software a pagamento
+%Software manufacturer bounded
+%Progetti abbandonati
+La soluzione open-source pi\`u utilizzata e sviluppata \'e sicuramente la gi\`a menzionata Kismet, che tra le tante funzionalit\`a permette, tramite API, la visualizzazione di tutti i dispositivi connessi ad un access point e ne fornisce eventuali valori del segnale.
+Questo tipo di approccio non permette per\`o una visione di insieme della topologia Wi-Fi poich\`e, ad esempio, l'individuazione di eventuali repeater non \'e automatizzata.
+
+Funzioni simili a quelle di Kismet si possono trovare nel prodotto UniFi \cite{unifi} di Ubiquity che fornisce una panoramica dettagliata dell'attivit\`a di rete e degli indici di connessione dei dispositivi.
+Purtroppo, software di questo tipo sono generalmente proprietari e limitati ad un utilizzo con dispositivi specifici del produttore.
+Questo tipo di soluzione non \'e quindi ottimale per la gestione di una rete locale domestica dove i dispositivi connessi sono generalmente di diversi produttori e non di livello professionale.
+
+Pi\`u comuni sono software come NetSpot \cite{netspot}, Kismac e inSSIder \cite{inssider} che forniscono invece una visione della rete Wi-Fi limitata agli access point presenti nelle vicinanze.
+In questo modo \'e possibile identificare eventuali problemi di connessione Wi-Fi dovuti alla sovrapposizione di pi\`u reti WLAN sullo stesso canale.
