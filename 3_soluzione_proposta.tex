@@ -236,7 +236,182 @@ Nella figura \ref{table:addressvalue} si mostrano le varie combinazioni che gli 
 \newpage
 
 \subsubsection{Management Frame}
+
+I frame di tipo management vengono utilizzati dalle stazioni e dall'access point per regolare l'accesso e disconnessione alla rete WLAN.
+Questo tipo di frame permette, durante la parte di analisi del traffico, di identificare gli access point  attivi ed eventuali dispositivi che stiano cercando di accedervi.
+%Bench\`e i sottotipi definiti per questo tipo di frame siano 16 si elencano, in tabella \ref{table:managementframes}, solo quelli effettivamente utilizzati dalla libreria per la costruzione topologica della rete.
+
+%\begin{table}[h]
+\begin{wraptable}{r}{8cm}
+\centering
+\begin{tabular}{| l | l |}
+	\hline
+	Subtype  & Descrizione \\ \hline
+	%0000 & Association Request \\ \hline
+	0001	 & Association Response 	\\ \hline
+  %  0010	 & Reassociation Request \\ \hline
+	%0011	 & Reassociation Response \\ \hline
+	0100	 & Probe Request \\ \hline
+	%0101	 & Probe Response \\ \hline
+%	0110	& Timing Advertisement \\ \hline
+	%0111	& Reserved \\ \hline
+	1000 &	Beacon \\ \hline
+	%1001	& ATIM \\ \hline
+	1010	& Disassociation \\ \hline
+	%1011	& Authentication \\ \hline
+	1100	& Deauthentication \\ \hline
+	%1101	& Action \\ \hline
+	%1110	& Action No Ack (NACK) \\ \hline
+	%1111	& Reserved \\ \hline 
+\end{tabular}
+%\end{flushright}
+\centering
+\caption{Sottotipi Mgmt Frame}
+\label{table:managementframes}
+%\end{table}
+\end{wraptable}
+
+Bench\`e i sottotipi definiti per questo tipo di frame siano 16 si elencano, in tabella \ref{table:managementframes}, solo quelli effettivamente utilizzati dalla libreria per la costruzione topologica della rete.
+
+Il sottotipo di frame pi\`u interessante per questa operazione \'e quello di Beacon, che viene utilizzato dagli access point per annunciare la presenza di una rete WLAN alle stazioni vicine.
+
+Nel frame body sono presenti 5 campi obbligatori:
+
+\begin{itemize}
+	\item Timestamp: 8 byte che indicano il tempo di attivit\`a dell'access point.
+	\item Beacon Interval: 2 byte che indicano la frequenza di invio di un beacon frame.
+	\item Capability Information: 2 byte utilizzati per specificare 
+	funzionalit\`a aggiuntive dell'access point.
+	\item	SSID: lunghezza variabile, identifica il nome logico di una rete WLAN.
+	\item Supported Rates: specifica la velocit\`a in Mbps che la stazione offre.
+\end{itemize}
+
+La libreria utilizza il Beacon frame per determinare se il MAC address del mittente sia  un access point che avr\`a, eventualmente, una serie di dispositivi a lui connesso.
+In aggiunta, analizzando il radiotap header di un Beacon frame \'e possibile fornire un quadro completo sui dettagli della rete che viene annunciata, in particolare: canale in uso, potenza del segnale.
+
+Come intuibile dalla descrizione, i frame di Association Response, Disassociation e Deauthentication indicano connessioni e disconnessioni di dispositivi alla rete wireless.
+In particolare i tipi di frame riguardanti le disconnessioni sono fondamentali per evitare di fornire una topologia della rete in cui vengano identificati come collegati dispositivi che non sono pi\`u appartenenti alla rete.
+Nonostante la loro importanza, la frequenza con cui questi frame vengono analizzati dipende fortemente dal tipo di monitoraggio che si effettua: costante o ad istanti di tempo.
+
+A differenza dei frame precedenti il Probe Request viene inviato da un dispositivo che si pone in cerca di reti WLAN a cui accedere e  la sua analisi avviene solo per misurare parametri di bont\`a del segnale poich\`e il dispositivo non \'e connesso a nessuna rete.
+
 \subsubsection{Control Frame}
+
+I frame di tipo control assistono l'invio di frame management e data, amministrando l'accesso al mezzo trasmissivo wireless.
+
+Come evidente dalla tabella \ref{table:controlframes} i principali frame che vengono analizzati corrispondono a quelli introdotti nella presentazione di DCF nel secondo capitolo.
+\begin{table}[h]
+%\begin{wraptable}{r}{8cm}
+\centering
+\begin{tabular}{| l | l |}
+	\hline
+	Subtype  & Descrizione \\ \hline
+	1001	 & Block Ack 	\\ \hline
+	1011	 & RTS \\ \hline
+	1100 &	CTS \\ \hline
+	1101	& ACK \\ \hline
+\end{tabular}
+%\end{flushright}
+\centering
+\caption{Sottotipi Control Frame}
+\label{table:controlframes}
+%\end{table}
+%\end{wraptable}
+\end{table}
+
+In questo tipo di frame, come specificato da DCF, non \'e presente un frame body.
+Per questo motivo l'analisi dei control frame da parte della libreria \'e in grado di fornire solamente una relazione di connessione tra due indirizzi MAC e quindi due dispositivi.
+
 \subsubsection{Data Frame}
-\subsubsection{Frames utilizzati}
+
+I Data frame vengono utilizzati nel protocollo 802.11 per la trasmissione di dati provenienti da livelli superiori.
+
+\begin{wraptable}{r}{8cm}
+\centering
+\begin{tabular}{| l | l |}
+	\hline
+	Subtype  & Descrizione \\ \hline
+	0000	 & Null No Data 	\\ \hline
+	0100	 & Data \\ \hline
+	1000 &	QoS Data \\ \hline
+	1100	& QoS Null No Data \\ \hline
+\end{tabular}
+%\end{flushright}
+\centering
+\caption{Sottotipi Data Frame}
+\label{table:dataframes}
+%\end{table}
+\end{wraptable}
+
+In tabella \ref{table:dataframes} si evidenziano i sottotipi di questo frame che vengono analizzati per la ricostruzione della topologia della rete WLAN.
+
+La cattura e l'analisi di questi tipi di frame permette l'identificazione dei dispositivi su cui la trasmissione wireless termina o inizia.
+
+Sfruttando questa informazione \'e quindi possibile identificare per ogni stazione che trasmette un frame il dispositivo a cui esso \'e collegato.
+
+Come verr\`a esposto nella sezione successiva questo procedimento \'e fondamentale per la corretta rappresentazione della topologia di rete e permette di identificare il percorso dei frame inviati da un dispositivo anche in presenza di ripetitori Wi-Fi.
+
 \subsubsection{Analisi ed euristica}
+
+Il funzionamento della libreria pu\`o essere diviso in tre principali fasi delle quali si  spiega, nel dettaglio, il funzionamento:
+
+\begin{enumerate}
+	\item Cattura ed analisi dei frame 802.11.
+	\item Ispezione degli indirizzi MAC dei dispositivi presenti e di eventuali access point. 
+	\item Topologia risultante.
+\end{enumerate}
+
+La cattura dei frame 802.11, come precedentemente introdotto, viene effettuata mediante la libreria libpcap e impostando la scheda di rete Wi-Fi in modalit\`a monitor.
+Durante questa procedura, per ogni frame ricevuto dalla scheda di rete, vengono analizzati il radiotap header ed il MAC header.
+In particolare, utilizzando il radiotap header, vengono estratte informazioni riguardanti la potenza del segnale della stazione che trasmette il frame ed il canale utilizzato per l'invio.
+
+L'analisi del MAC header \'e cruciale per fornire una corretta ricostruzione della topologia di rete e comprende diversi controlli di correttezza.
+In primis viene effettuato un controllo sul FCS per poter scartare tutti i frame corrotti che vengono catturati.
+Se il pacchetto ricevuto \'e esente da errori, vengono successivamente analizzati gli indirizzi MAC in base al tipo e sottotipo di frame ricevuto.
+In questo controllo vengono scartati tutti pacchetti di tipo data e control i cui indirizzi destinatari sono di tipo broadcast, poich\`e questi tipi di frame non forniscono informazioni su alcun dispositivo connesso.
+
+Soddisfatti questi requisiti gli indirizzi MAC presenti nel frame vengono considerati dispositivi Wi-Fi di interesse e memorizzati per poi poter esser nuovamente ispezionati al termine del procedimento di cattura.
+
+Nel caso in cui il dispositivo analizzato abbia trasmesso almeno un frame di tipo beacon, questo viene considerato come un access point.
+\newpage
+Per ogni dispositivo, in questo stadio dell'esecuzione, sono quindi noti i seguenti valori:
+\begin{itemize}
+	\item Canale, potenza e rumore dell'antenna.
+	\item Indirizzo MAC.
+	\item Lista di indirizzi MAC con cui il dispositivo interagisce.
+	\item Nome della rete annunciata (se AP).
+\end{itemize}
+
+La fase successiva necessaria per la ricostruzione della topologia di rete consiste nell'associare eventuali indirizzi MAC virtuali e multicast ai rispettivi indirizzi globalmente assegnati.
+Questo procedimento \'e necessario per evitare di includere nella topologia Wi-Fi indirizzi MAC che, in realt\`a, non appartengono a nessun dispositivo.
+Non \'e affatto raro, infatti, l'utilizzo di indirizzi virtuali da parte di repeater ed access point per la trasmissione in rete o l'uso di multicast da parte di router per l'invio di frame a singoli dispositivi.
+Il risultato ottenuto \'e un diretto collegamento tra un indirizzo virtuale al suo indirizzo globalmente assegnato, sia esso ottenuto mediante una precedente ARP scan o dalla cattura di frame 802.11.
+
+Il passo successivo effettuato dalla libreria \'e quello di applicare un'euristica in grado di determinare se un dispositivo di rete abbia pi\`u di una antenna Wi-Fi ed in che modo queste vengano utilizzate.
+Gli attuali access point presenti in commercio aderiscono allo standard 802.11AC e sono quindi provvisti di una moltitudine di antenne wireless.
+Dopo lo studio di numerosi dispositivi di questo tipo si \'e formulata una euristica coerente con i comportamenti osservati, basata sulla divisione dell'indirizzo MAC in due sezioni:la prima comprendente i primi cinque ottetti e la seconda il restante ottetto.
+Infatti, gli indirizzi MAC delle varie antenne presente in questo tipo di dispositivi sembrano essere sempre maggiori in valore rispetto all'indirizzo fornito dal produttore.
+Considerando quindi tutti gli indirizzi MAC ottenuti dalla cattura di frame ed, eventualmente, anche dall'ARP scan si seleziona quello che presenta un valore minore nell'ultimo ottetto come l'indirizzo effettivo del dispositivo.
+
+L'euristica presentata, in aggiunta a quella implementata per assegnare un indirizzo MAC globale ad uno localmente assegnato, risolve inoltre un altro problema emerso durante lo sviluppo della libreria riguardante l'utilizzo di indirizzi MAC da parte di repeater Wi-Fi.
+Durante lo studio approntato sono stati infatti individuati due metodi di funzionamento dei repeater, anche in dispositivi la cui unica differenza risiedeva nel firmware installato.
+
+Uno dei metodi in cui i repeater trattano il traffico \'e quello intuitivo in cui i frame inviati e ricevuti dai dispositivi associati vengono trasmessi in modo trasparente dal repeater stesso.
+In questo caso l'indirizzo MAC del repeater viene incluso nel frame 802.11 come TA.
+
+Il secondo metodo osservato consiste nell'uso da parte del repeater di diversi indirizzi MAC per ogni dispositivo ad esso connesso.
+In particolare il MAC risultante \'e cos\`i definito: i primi tre ottetti corrispondono al LAA del repeater mentre gli ultimi tre ottetti corrispondono al NIC del dispositivo a lui connesso.
+%Immagine
+La validazione di questi tipi di euristiche \'e rimandata al successivo capitolo.
+
+L'ultimo passo effettuato dalla libreria \'e quello di creare due strutture facili da interpretare che rappresentino la topologia di ogni rete Wi-Fi nelle vicinanze.
+
+Una struttura contiene una lista di tutte le reti wireless, in particolare:
+
+\begin{itemize}
+	\item Indirizzo MAC dell'access point, canale della rete Wi-Fi, potenza segnale e rumore.
+	\item Lista di indirizzi MAC dei dispositivi connessi alla rete, indicando se questi siano connessi direttamente all'access point o meno.
+\end{itemize}
+
+La seconda struttura contiene invece una lista di indirizzi tutti i dispositivi attivi nelle vicinanze ed un indirizzo a cui essi sono collegati, sia esso un access point o repeater, ed i valori di potenza segnale e rumore.
+
