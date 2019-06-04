@@ -3,7 +3,7 @@ In questo capitolo viene presentata la soluzione proposta per la rilevazione di 
 Si analizza brevemente l'architettura del software sviluppato per poi fornirne una descrizione dettagliata della sua implementazione e del software utilizzato nello sviluppo.
 
 \section{Architettura}
-L'architettura della soluzione proposta \'e principalmente suddivisa in due parti come mostrato in figura: %FIGURA
+L'architettura della soluzione proposta \'e principalmente suddivisa in due parti come mostrato in figura \ref{fig:solproposta}: %FIGURA
 \begin{itemize}
 
 \item una libreria che implementa un'operazione di ARP \cite{rfc826} scan, utilizzata per fornire una metrica del round-trip time (RTT) ed associare ad indirizzi IPv4 nella rete locale i rispettivi indirizzi MAC.
@@ -55,7 +55,7 @@ Il risultato ottenuto \'e un'associazione tra indirizzo IP ed indirizzo media ac
 L'indirizzo MAC cos\`i ottenuto verr\`a poi utilizzato per fornire una maggiore accuratezza nella ricostruzione della topologia Wi-Fi della rete locale in esame.
 
 Sebbene questo sia il motivo principale di implementazione della libreria, \'e inoltre possibile ricavare una misura del round-trip time verso ogni dispositivo connesso alla rete, in modo analogo al ping attraverso richieste ICMP.
-A differenza di quest ultimo che pu\`o essere ignorato da alcuni tipi di dispositivi, utilizzando l'ARP ping con un numero di pacchetti appropriato \'e possibile ricevere riscontro da tutti i dispositivi attualmente connessi alla rete locale.
+A differenza di quest'ultimo che pu\`o essere ignorato da alcuni tipi di dispositivi, utilizzando l'ARP ping con un numero di pacchetti appropriato \'e possibile ricevere riscontro da tutti i dispositivi attualmente connessi alla rete locale.
 In particolare, i dispositivi che tendono ad ignorare questo tipo di richieste sono quelli di tipo mobile come smartphone e tablet nei momenti di non utilizzo da parte dell'utente.
 
 Bench\`e ci siano gi\`a diverse implementazioni funzionanti per i sistemi operativi pi\`u utilizzati, si \'e deciso di sviluppare una libreria basilare che svolga solo le operazioni necessarie per la ricostruzione topologica della rete.
@@ -85,7 +85,7 @@ Questo tipo di cattura, come descritto precedemente, \'e effettuata utilizzando 
 La cattura in monitor mode, o RFMON (Radio Frequency MONitor), permette ad una interfaccia di rete wireless di catturare tutto il traffico passante per un canale Wi-Fi.
 
 In questa modalit\`a una scheda di rete non \'e associata ad alcun access point o rete ad-hoc e si pone in uno stato di ascolto in maniera completamente trasparente ad altri dispositivi wireless presenti nelle vicinanze.
-Per effettuare ci\`o non vengono rispettati i normali comportamenti di una stazione operante con il protocollo 802.11, come ad esempio l'invio di ACK come descritto nel secondo capitolo.
+Per effettuare ci\`o non vengono rispettati i normali comportamenti di una stazione operante con il protocollo 802.11, come ad esempio l'invio di ACK descritto nel secondo capitolo.
 Di conseguenza, in questa modalit\`a, il dispositivo perde la possibilit\`a di trasmettere dati ed il suo utilizzo \'e ristretto ad un singolo canale wireless.
 Un'altra limitazione in questo tipo di cattura riguarda il mancato controllo di errori nei pacchetti catturati, effettuato normalmente con un controllo di ridondanza ciclico (CRC).
 
@@ -179,9 +179,9 @@ Un esempio, che sar\`a discusso anche nel prossimo capitolo, potrebbe essere que
 Un MAC address \'e un identificatore unico associato ad un'interfaccia di rete dal proprio costruttore e viene utilizzato nel protocollo 802.11 per l'instradamento dei frame.
 L'indirizzo \'e formato da una struttura di 48 bit divisa in 6 ottetti, come mostrato in figura \ref{fig:macaddress}.
 %Guidelines for Use of Extended Unique Identifier (EUI), Organizationally Unique Identifier (OUI), and Company ID
-Per mantenere l'unicit\`tra tutte le schede di rete prodotte \'e stato introdotto uno standard, chiamato EUI-48 e gestito dalla IEEE, che divide l'indirizzo MAC in due parti:
+Per mantenere l'unicit\`a tutte le schede di rete prodotte \'e stato introdotto uno standard, chiamato EUI-48 e gestito dalla IEEE, che divide l'indirizzo MAC in due parti:
 \begin{itemize}
-	\item Organisationally Unique Identifier (OUI): identifica unicamente un produttore di schede di rete ed assegnato dalla IEEE.
+	\item Organisationally Unique Identifier (OUI): identifica unicamente un produttore di schede di rete ed \'e assegnato dalla IEEE.
 	\item Network Interface Controller (NIC): identifica unicamente una determinata scheda di rete e viene assegnata dal prodottore.
 \end{itemize}
 
@@ -361,7 +361,7 @@ Il funzionamento della libreria pu\`o essere diviso in tre principali fasi delle
 	\item Topologia risultante.
 \end{enumerate}
 
-La cattura dei frame 802.11, come precedentemente introdotto, viene effettuata mediante la libreria libpcap e impostando la scheda di rete Wi-Fi in modalit\`a monitor.
+La cattura dei frame 802.11, come precedentemente introdotto, viene effettuata mediante la libreria libpcap ed impostando la scheda di rete Wi-Fi in modalit\`a monitor.
 Durante questa procedura, per ogni frame ricevuto dalla scheda di rete, vengono analizzati il radiotap header ed il MAC header.
 In particolare, utilizzando il radiotap header, vengono estratte informazioni riguardanti la potenza del segnale della stazione che trasmette il frame ed il canale utilizzato per l'invio.
 
@@ -389,8 +389,8 @@ Il risultato ottenuto \'e un diretto collegamento tra un indirizzo virtuale al s
 
 Il passo successivo effettuato dalla libreria \'e quello di applicare un'euristica in grado di determinare se un dispositivo di rete abbia pi\`u di una antenna Wi-Fi ed in che modo queste vengano utilizzate.
 Gli attuali access point presenti in commercio aderiscono allo standard 802.11AC e sono quindi provvisti di una moltitudine di antenne wireless.
-Dopo lo studio di numerosi dispositivi di questo tipo si \'e formulata una euristica coerente con i comportamenti osservati, basata sulla divisione dell'indirizzo MAC in due sezioni:la prima comprendente i primi cinque ottetti e la seconda il restante ottetto.
-Infatti, gli indirizzi MAC delle varie antenne presente in questo tipo di dispositivi sembrano essere sempre maggiori in valore rispetto all'indirizzo fornito dal produttore.
+Dopo lo studio di numerosi dispositivi di questo tipo si \'e formulata un'euristica coerente con i comportamenti osservati, basata sulla divisione dell'indirizzo MAC in due sezioni:la prima comprendente i primi cinque ottetti e la seconda il restante ottetto.
+Infatti, gli indirizzi MAC delle varie antenne presenti in questo tipo di dispositivi sembrano essere sempre maggiori in valore rispetto all'indirizzo fornito dal produttore.
 Considerando quindi tutti gli indirizzi MAC ottenuti dalla cattura di frame ed, eventualmente, anche dall'ARP scan si seleziona quello che presenta un valore minore nell'ultimo ottetto come l'indirizzo effettivo del dispositivo.
 
 L'euristica presentata, in aggiunta a quella implementata per assegnare un indirizzo MAC globale ad uno localmente assegnato, risolve inoltre un altro problema emerso durante lo sviluppo della libreria riguardante l'utilizzo di indirizzi MAC da parte di repeater Wi-Fi.
@@ -402,7 +402,7 @@ In questo caso l'indirizzo MAC del repeater viene incluso nel frame 802.11 come 
 Il secondo metodo osservato consiste nell'uso da parte del repeater di diversi indirizzi MAC per ogni dispositivo ad esso connesso.
 In particolare il MAC risultante \'e cos\`i definito: i primi tre ottetti corrispondono al LAA del repeater mentre gli ultimi tre ottetti corrispondono al NIC del dispositivo a lui connesso.
 %Immagine
-La validazione di questi tipi di euristiche \'e rimandata al successivo capitolo.
+La validazione di questi tipi di euristiche \'e rimandata al capitolo successivo.
 
 L'ultimo passo effettuato dalla libreria \'e quello di creare due strutture facili da interpretare che rappresentino la topologia di ogni rete Wi-Fi nelle vicinanze.
 

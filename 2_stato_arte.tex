@@ -1,9 +1,9 @@
 %\raggedbottom
 \chapter{Stato dell'arte}
-In questo capitolo vengono presentate le motivazioni che hanno portato alla stesura di questo elaborato e le soluzioni per rilevazione di disservizi nella connettivit\`a pi\'u utilizzate.
+In questo capitolo vengono presentate le motivazioni che hanno portato all'attivit\`a di tirocinio e le soluzioni per rilevazione di disservizi nella connettivit\`a pi\'u utilizzate.
 
 \section{Motivazione}
-Come introdotto nel precedente capitolo, lo scopo di questo lavoro \'e di fornire una soluzione per la rilevazione di disservizi in reti locali domestiche.
+Come introdotto nel precedente capitolo, lo scopo di questo tirocinio \'e di fornire una soluzione per la rilevazione di disservizi in reti locali domestiche.
 Lo studio si \'e focalizzato su questo tipo di infrastrutture poich\`e esse rappresentano la maggioranza delle reti e, molto spesso, la loro configurazione \'e  lasciata ad un utente finale con poche conoscenze del campo.
 Questo pu\`o portare a prestazioni poco efficienti per quanto riguarda le connessioni Wi-Fi o all'uso di apparecchiature di scarsa qualit\`a che dimuiscono le velocit\`a di download ed upload dei dispositivi.
 In aggiunta, access point vicini, se sullo stesso canale Wi-Fi,potrebbero interferire sulla connessione locale.
@@ -13,9 +13,6 @@ Questo permette agli Internet Service Providers (ISP) di fornire una diagnostica
 Nel primo caso, l'utente viene informato della presenza del problema nella sua rete locale e quali dispositivi ne siano affetti, mentre nel secondo caso \'e il fornitore del servizio Internet a dover intervenire sulla propria rete per rimediare al disservizio.
 Le soluzioni attuali per il monitoraggio e la gestione di rete presentano infatti diverse problematiche quando applicate a reti piccole locali.
 \newpage
-%In particolare, sono principalmente ristrette ad apparecchiature di fascia alta, molto lontane da quelle fornite dai provider Internet ai loro utenti.
-%Le soluzioni attuali per il monitoraggio e gestione di rete, come ad esempio SNMP\cite{rfc1157}, sono infatti principalmente ristrette ad apparecchiature di fascia alta, molto lontane da quelle fornite dai provider Internet ai loro utenti.
-%In altri casi, anche alcune funzionalit\`a come il rilevamento di rete CDP sono proprietarie o funzionanti solo con apparati dello stesso produttore.
 In particolare il software \'e:
 \begin{itemize}
 	\item Ristretto ad apparecchiature di fascia alta.
@@ -41,7 +38,7 @@ DCF descrive due tecniche per la trasmissione di pacchetti:
 Il meccanismo di accesso base \'e ottenuto attraverso la trasmissione immediata di un acknowledgment positivo (ACK) da parte della stazione destinataria dopo aver ricevuto correttamente un pacchetto dal mittente.
 L'invio esplicito dell'ACK \'e richiesto poich\`e in un mezzo trasmissivo senza fili il mittente non pu\`o determinare se il pacchetto sia stato ricevuto correttamente ascoltando la sua stessa trasmissione.
 
-Il meccanismo RTS/CTS \'e opzionale e prevede che una stazione interessata all'invio di un pacchetto riservi il mezzo tramite un pacchetto request to send.
+Il meccanismo RTS/CTS \'e opzionale e prevede che una stazione interessata all'invio di un pacchetto riservi il mezzo trasmissivo tramite un pacchetto request to send.
 Dopo che il destinatario riconosce questo pacchetto con un frame CTS la comunicazione continua con l'invio del pacchetto desiderato e di relativo ACK.
 
 Questo meccanismo permette l'incremento della performance del sistema grazie alla riduzione della durata di collisione che potrebbe avvenire con l'invio di lunghi pacchetti.
@@ -127,7 +124,7 @@ I restanti due casi esprimono il sistema in caso di fallimento nella trasmission
 In particolare la terza equazione esprime come avvenga un aumento del backoff stage e la scelta di un nuovo valore di backoff iniziale nel range (0,W\textsubscript{i}).
 Infine, l'ultima equazione, modella il massimo valore m che il tempo di backoff pu\`o assumere.
 Dopo aver trovato la formula chiusa della catena di Markov si pu\`o esprimere la probabilit\`a $\tau$ che una stazione trasmetta in uno slot di tempo casuale.
-Poich\`e la trasmissione avviene quando il timer di backoff raggiunge lo 0, a prescindere dal backoff stage il valore di tau \'e pari a:
+Poich\`e la trasmissione avviene quando il timer di backoff raggiunge lo 0, a prescindere dal backoff stage il valore di $\tau$ \'e pari a:
 
 
 \begin{equation}
@@ -137,7 +134,7 @@ Poich\`e la trasmissione avviene quando il timer di backoff raggiunge lo 0, a pr
 Il valore di p, ovvero della probabilit\`a di collisione, \'e pari alla probabilit\`a che una delle restanti n-1 stazioni decida di trasmettere un pacchetto.
 
 \begin{equation}
-1-(1-\tau)^{n-1}
+p =1-(1-\tau)^{n-1}
 \end{equation}
 
 Possiamo quindi dire che 
@@ -197,7 +194,7 @@ $$
 
 Il modello presentato da Bianchi si \'e rivelato, dopo validazione tramite simulazione, efficace per rappresentare i diversi schemi di accesso utilizzati da DCF: in particolare quello base, RTS/CTS ed una combinazione dei due che non \'e stata riportata.
 I risultati ottenuti dal modello mostrano che la performance del metodo di accesso base dipende fortemente sui parametri del sistema, principalmente il numero di stazioni connessi ed i parametri minimi della finestra di contesa.
-Questi ultimi sono per\`o meno influenti sul metodo RTS/CTS che si presenta come la migliore opzione di accesso al metodo per reti di grandi dimensioni per via della possibilit\`a di arginare il problema dei terminali nascosti ed un minore tempo impiegato durante la collisione quando pi\`u stazioni trasmettono contemporaneamente.
+Questi ultimi sono per\`o meno influenti sul metodo RTS/CTS che si presenta come la migliore opzione di accesso al mezzo trasmissivo per reti di grandi dimensioni per via della possibilit\`a di arginare il problema dei terminali nascosti ed un minore tempo impiegato durante la collisione quando pi\`u stazioni trasmettono contemporaneamente.
 
 \newpage
 
@@ -206,13 +203,13 @@ Questi ultimi sono per\`o meno influenti sul metodo RTS/CTS che si presenta come
 Lo studio condotto da Wu et al \cite{wu2002performance} propone un modello basato su quello di Bianchi che tiene per\`o conto del limite di tentativi di ritrasmissione di un frame.
 In aggiunta, viene proposto un miglioramento allo standard 802.11 con l'introduzione di DCF+.
 Questo meccanismo di accesso al metodo di trasmessione \'e introdotto per cercare di sopperire alle problematiche di performance di cui protocolli di livello trasporto soffrono in reti wireless \cite{xylomenos1999tcp}.
-In particolare, lo studio si concentra sul risolvere la contesa per il canale di trasmissione che avviene durante lo scambio di dati ed ACK TCP, meccanismo che potrebbe causare collisioni e un degrado delle prestazioni.
+In particolare, lo studio si concentra sul risolvere la contesa per il canale di trasmissione che avviene durante lo scambio di dati ed ACK TCP, meccanismo che potrebbe causare collisioni ed un degrado delle prestazioni.
 La soluzione proposta \'e inoltre compatibile con DCF definito dallo standard 802.11, questo vuol dire che in una stessa rete possono coesistere e comunicare stazioni che supportano due metodi di accesso al mezzo trasmissivo diversi.
 
 Il principale cambiamento che DCF+ apporta \'e quello di utilizzare il MAC ACK specificato nello standard 802.11 come un RTS.
-Questo \'e in linea con l'implementazione di DCF che prevede l'invio di un ACK in caso di una trasmissione ricevuta con succeso e permette una retrocompatibilit\`a con stazioni che non implementano DCF+.
+Questo \'e in linea con l'implementazione di DCF che prevede l'invio di un ACK in caso di una trasmissione ricevuta con successo e permette una retrocompatibilit\`a con stazioni che non implementano DCF+.
 
-In figura si mostra un esempio del funzionamento di DCF+ assumendo che la stazione destinatario debba, oltre a ricevere un frame dal mittente, anche inviargli un pacchetto dati.
+In figura \ref{fig:dcf+ex} si mostra un esempio del funzionamento di DCF+ assumendo che la stazione destinatario debba, oltre a ricevere un frame dal mittente, anche inviargli un pacchetto dati.
 Successivamente alla corretta ricezione del frame dati il destinatario procede ad inviare un ACK al mittente che, come gi\`a introdotto, viene considerato come un RTS ed utilizzato per inizializzare anche il NAV delle altre stazioni in ascolto. 
 Come da implementazione del DCF il mittente risponde a questo frame con un CTS ed inizializza i valori del NAV pari alla lunghezza del frame di dati che deve ricevere.
 L'operazione si conclude con l'invio del pacchetto ed un normale ACK di riscontro.
@@ -267,13 +264,13 @@ T_{c}^{rts} = DIFS + RTS + SIFS + CTS \\
 $$
 
 Il modello analitico sviluppato da questo studio si \'e dimostrato pi\`u accurato rispetto a quello proposto da \cite{bianchi2000performance} in seguito alle simulazioni svolte.
-Quest ultimo infatti sovrastima il throughput poich\`e non considera il limite di ritrasmissioni ed il timeout dovuto all'ACK.
+Quest'ultimo infatti sovrastima il throughput poich\`e non considera il limite di ritrasmissioni ed il timeout dovuto all'ACK.
 Le prestazioni di DCF+ sono poi state comparate a quelle di DCF utilizzando il modello presentato, evidenziando un miglioramento in metriche quali: goodput, fairness nell'utilizzo del mezzo trasmissivo e delay a livello MAC.
 
 \newpage
 \section{IEEE 802.11E EDCF}
 Fino allo standard IEEE 802.11e \cite{ieee05} il modello della WLAN pu\`o essere visto come una versione wireless di Ethernet che supporta un servizio best effort.
-L'aumento dei servizi offerti in streaming e VoIP ha per\`o reso necessaria l'implementazione di meccanismi per il supporto quality of service (QoS), ovvero la possibilit\a` di fornire una diversa priorit\`a a diverse applicazioni o utenti.
+L'aumento dei servizi offerti in streaming e VoIP ha per\`o reso necessaria l'implementazione di meccanismi per il supporto quality of service (QoS), ovvero la possibilit\`a di fornire una diversa priorit\`a a diverse applicazioni o utenti.
 Nel principio 802.11 non fornisce questo supporto di differenziare frame in base a priorit\`a, tutto ci\`o che fornisce DCF \'e un accesso al canale in contesa con uguale probabilit\`a per tutte le stazioni.
 Lo standard 802.11e definisce due miglioramenti al fine di supportare QoS mediamente l'introduzione di Enhanced Distributed Coordination Function (EDCF) e Hybrid Coordination Function (HCF).
 In EDCF vengono implementate delle categorie di traffico (TC) a cui vengono associate diverse priorit\`a come mostrato nella tabella \ref{table:catvalues}.
@@ -320,7 +317,7 @@ Diversi studi sono stati improntati sulla performance di EDCF, in particolare \c
 Con l'opportuna scelta di parametri, stazioni EDCF riescono infatti ad avere priorit\`a sul canale rispetto a stazioni che implementano DCF.
 
 Xiao \cite{xiao2004performance} ha successivamente fornito un modello analitico, seguendo le orme di Bianchi, di EDCF.
-Utilizzando metriche di backoff quali: dimensione iniziale della finestra, limite di ritrasmissioni e il fattore di incremento della finestra di backoff i risultati ottenuti dallo studio mostrano come una categoria di traffico possa rubare banda ad un altra categoria in caso questa aumenti il valore delle suddette metriche.
+Utilizzando metriche di backoff quali: dimensione iniziale della finestra, limite di ritrasmissioni e il fattore di incremento della finestra di backoff i risultati ottenuti dallo studio mostrano come una categoria di traffico possa rubare banda ad un'altra categoria in caso questa aumenti il valore delle suddette metriche.
 In aggiunta, viene suggerita una ridimensione del limite di ritrasmissioni per traffico di tipo video per aumentare throughput e migliorare il delay.
 
 \newpage
@@ -340,7 +337,7 @@ Il successivo standard 802.11ac, utilizzato maggiormente nella realizzazione del
 Un header radiotap \'e un meccanismo che viene utilizzato per aggiungere informazioni ad un frame 802.11 al momento della sua cattura.
 Pur non facendo parte in alcun modo di pacchetti 802.11 l'importanza delle metriche fornite ed il supporto ai pi\`u utilizzati sistemi operativi lo rendono 
 uno standard per la ricezione di frame 802.11.
-L'header radiotap viene aggiunto al frame catturato dal device di rete, o dal suo driver, e contiene quindi informazioni fornite dalla particolare stazione che riceve e non di quella che trasmette.
+L'header radiotap viene aggiunto al frame catturato dal device di rete, o dal suo driver, e contiene quindi informazioni fornite dalla particolare stazione che riceve e non da quella che trasmette.
 
 Si elencano ora alcuni dei campi presenti nel radiotap header, in particolare quelli utilizzati per lo sviluppo della soluzione proposta dal tirocinio:
 
@@ -354,7 +351,7 @@ Si elencano ora alcuni dei campi presenti nel radiotap header, in particolare qu
 
 In particolare con l'uso di queste metriche, oltre ad identificare su quale canale un AP stia utilizzando per le proprie trasmissioni, si pu\`o fornire un valore riguardante la bont\`a del segnale Wi-Fi.
 
-La differenza tra antenna signal ed antenna noise fornisce, infatti, un parametro chiamato Signal-to-Noise-Ratio (SNR) che viene per classificare la qualit\`a del segnale.
+La differenza tra antenna signal ed antenna noise fornisce, infatti, un parametro chiamato Signal-to-Noise-Ratio (SNR) che viene utilizzato per classificare la qualit\`a del segnale.
 In generale i valori del SNR si possono cos\`i catalogare:
 
 \begin{itemize}
@@ -365,7 +362,7 @@ In generale i valori del SNR si possono cos\`i catalogare:
 	\item 5db-10db: nessun segnale.
 \end{itemize}
 
-Avere un SNR accettabile per ogni dispositivo connesso alla rete \'e fondamentale per la performance generale, poich\`e uno scarso segnale contribuisce fortemente all'aumentare del numero di ritrasmissioni e quindi una diminuzione del throughput del sistema Wi-Fi.
+Avere un SNR accettabile per ogni dispositivo connesso alla rete \'e fondamentale per la performance generale, poich\`e uno scarso segnale contribuisce fortemente all'aumentare del numero di ritrasmissioni e quindi ad una diminuzione del throughput del sistema Wi-Fi.
 
 \section{Software di monitoraggio Wi-Fi}
 
@@ -373,7 +370,7 @@ I metodi di accesso al mezzo trasmissivo e le metriche per misurare la bont\`a d
 %Software a pagamento
 %Software manufacturer bounded
 %Progetti abbandonati
-La soluzione open-source pi\`u utilizzata e sviluppata \'e sicuramente la gi\`a menzionata Kismet, che tra le tante funzionalit\`a permette, tramite API, la visualizzazione di tutti i dispositivi connessi ad un access point e ne fornisce eventuali valori del segnale.
+La soluzione open-source pi\`u utilizzata e sviluppata \'e sicuramente la gi\`a menzionata Kismet che, tra le tante funzionalit\`a, permette, tramite API, la visualizzazione di tutti i dispositivi connessi ad un access point e ne fornisce eventuali valori del segnale.
 Questo tipo di approccio non permette per\`o una visione di insieme della topologia Wi-Fi poich\`e, ad esempio, l'individuazione di eventuali repeater non \'e automatizzata.
 
 Funzioni simili a quelle di Kismet si possono trovare nel prodotto UniFi \cite{unifi} di Ubiquity che fornisce una panoramica dettagliata dell'attivit\`a di rete e degli indici di connessione dei dispositivi.
