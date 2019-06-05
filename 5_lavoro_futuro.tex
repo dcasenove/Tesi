@@ -1,6 +1,6 @@
 \chapter{Lavori futuri}
 
-Nei capitoli precedenti sono state presentate e validate alcune euristiche utilizzate per la ricostruzione topologica di una rete Wi-Fi.
+Nei capitoli precedenti sono state presentate e validate alcune euristiche implementate per la ricostruzione topologica di una rete Wi-Fi.
 L'approccio utilizzato si basa sulle caratteristiche degli indirizzi MAC per identificare e raggruppare tutte le varie antenne che un router o repeater utilizzano per la trasmissione nella rete locale.
 
 Un possibile sviluppo futuro potrebbe essere quello di studiare ed eventualmente implementare diversi tipi di euristiche aggiuntive.
@@ -9,7 +9,7 @@ Poich\`e questi sono forniti di numerose antenne, l'uso di un unico canale porte
 Studiando quindi il funzionamento di diverse tipologie di questi dispositivi si potrebbe implementare un'euristica che aiuti nel raggruppare tutti i vari indirizzi MAC e relative antenne in base al canale utilizzato.
 
 Dopo aver validato la soluzione proposta su reti locali di piccole dimensioni si potrebbe estendere l'utilizzo di questa anche a reti professionali di dimensioni superiori.
-Si potrebbero infatti posizionare una moltitudine di dispositivi implementanti la soluzione proposta nei pressi dei vari access point presenti in una rete di queste dimensioni.
+Questo \'e infatti possibile posizionando una moltitudine di dispositivi implementanti la soluzione proposta nei pressi dei vari access point presenti in una rete di queste dimensioni.
 Le modifiche da effettuare necessarie per il corretto funzionamento comprendono la realizzazione di un unico database a cui i vari dispositivi che effettuano monitoraggio  inviano, in maniera concorrente, la loro visione parziale della topologia e valori di bont\`a del segnale.
 In questo modo \'e possibile analizzare tutto il traffico catturato dai dispositivi e ricostruire in modo dettagliato la topologia di una rete di grandi dimensioni.
 Questo tipo di sviluppo comporta quindi una modifica sia architetturale che implementativa della soluzione proposta.

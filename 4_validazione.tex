@@ -143,10 +143,56 @@ Queste prove hanno per\`o mostrato come la libreria sia in grado di distinguere 
 \end{figure}
 
 %Biblioteca
+\newpage 
 
 \section{Rilevazione di disservizi}
 
+Le metriche di qualit\`a della connettivit\`a  che utilizza la soluzione proposta sono due:
+\begin{itemize}
+	\item RTT: ottenuto tramite l'ARP scan, se effettuata.
+	\item SNR: ottenuto effettuando la differenza tra potenza segnale Wi-Fi e rumore di sottofondo.
+\end{itemize}
+
+Il RTT ottenuto nella rete \'e utile per fornire un quadro generale della raggiungibilit\`a di tutti i dispositivi collegati alla rete locale sotto analisi ma non \'e particolarmente utile alla rilevazione di disservizi per dispositivi Wi-Fi.
+%Eth vs Wifi
+
+Questa metrica \'e per\`o l'unica utilizzata dalla soluzione proposta per valutare lo stato di connessione di dispositivi cablati, rendendo quindi fondamentale l'uso dell'ARP scan se si desidera conoscere la connettivit\`a di questi terminali.
+
+I valori considerati standard per questo tipo di analisi sono variano tra <1ms e 5ms per quanto riguarda la connessione cablata mentre questa metrica si rileva poco efficace per stimare una connettivit\`a di tipo wireless, poich\`e troppo inconsistente.
+
+Per fornire una pi\`u accurata misura della bont\`a del segnale la soluzione proposta, come introdotto nel capitolo precedente, dopo aver ottenuto i parametri di potenza del segnale e rumore di sottofondo, calcola il SNR.
+Questo tipo di metrica, utilizzata dai network manager di tutti i sistemi operativi e software professionali, fornisce una divisione in categorie della bont\`a del segnale.
+
+Poich\`e i valori utilizzati dal calcolo vengono calcolati in base alla potenza del segnale alla scheda di rete che sta effettuando la cattura dei frame, il dispositivo implementante la soluzione proposta deve essere posto in prossimit\`a dell'access point della rete che si vuole monitorare.
+
+Utilizzando la topologia ottenuta dall'analisi dei frame e gli SNR calcolati la libreria \'e in grado di identificare in modo esatto, in caso di problemi di connessione Wi-Fi, tutti i dispositivi affetti.
+Questo \'e possibile sia nel caso in cui il dispositivo sia connesso direttamente all'access point o ad un repeater.
+
+Nel primo caso, un valore non ottimale del SNR, identifica un problema nel dispositivo stesso poich\`e esso \'e direttamente collegato all'access point.
+
+Nel secondo caso, poich\`e si conosce anche il valore SNR del repeater collegato all'access point, un valore non ottimale in questo dispositivo avr\`a ripercussioni anche sulla connessione dei terminali a lui collegato.
+In questo caso i valori SNR di quest'ultimi si riferiscono al loro collegamento con il repeater.
+
+%In caso di valori SNR particolarmente bassi per un dispositivo, come ad esempio <15db, la libreria pu\`o avvertire con un alert l'utente finale.
 
 
+%\newpage
 
 \section{Analisi delle prestazioni}
+
+Poich\`e si vuole implementare la soluzione proposta su dispositivi con limitate risorse di memoria e calcolo, come ad esempio router, \'e importante fornire un'implementazione che non sia eccessivamente dispendiosa sotto questi due tipi di metriche.
+
+Le strutture utilizzate per l'analisi ed i relativi dati memorizzati sono stati introdotti nel capitolo precedente e dipendono fortemente dal numero di dispositivi identificati con l'analisi del traffico.
+Bench\`e questi siano generalmente in basso numero in reti locali domestiche, la loro memorizzazione non \'e il principale dispendio di memoria che la libreria effettua.
+
+Mediante il software per la ricerca di problemi di memoria Valgrind \cite{valgrind}, ci si \'e assicurati che la libreria sviluppata non presenti memory leak e, utilizzando i file di cattura precedentemente introdotti, se ne \'e analizzato l'utilizzo di memoria.
+
+Utilizzando come riferimento i file di cattura presentati l'utilizzo di memoria medio della libreria \'e di circa 5MB.
+L'utilizzo massimo di memoria \'e stato di circa 20MB ed \'e dovuto ad un lungo periodo di cattura e la presenza di un dispositivo in riproduzione streaming multimediale.
+In questo caso il numero di pacchetti analizzati era circa 30 mila, una cifra ben lontana da catture effettuate per tempi ragionevoli anche in reti professionali con numerosissimi dispositivi connessi dove il numero di pacchetti analizzato \'e stato circa 4 mila.
+
+Se ne pu\`o quindi dedurre che l'utilizzo di memoria della libreria \'e principalmente determinato dal numero di dispositivi connessi e dalla quantit\`a di traffico da loro generato.
+La durata di cattura pu\`o comunque essere modificata in base alla quantit\`a di frame che vengono ricevuti.
+
+Il tempo di esecuzione della libreria \'e strettamente legato alla durata della cattura di frame 802.11.
+Anche in questo caso, le operazioni di analisi dei pacchetti implementate non sono, in ordine di tempo, dispendiose.
