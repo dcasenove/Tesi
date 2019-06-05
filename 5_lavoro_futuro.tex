@@ -1,1 +1,30 @@
-\chapter{Lavoro futuro}
+\chapter{Lavori futuri}
+
+Nei capitoli precedenti sono state presentate e validate alcune euristiche utilizzate per la ricostruzione topologica di una rete Wi-Fi.
+L'approccio utilizzato si basa sulle caratteristiche degli indirizzi MAC per identificare e raggruppare tutte le varie antenne che un router o repeater utilizzano per la trasmissione nella rete locale.
+
+Un possibile sviluppo futuro potrebbe essere quello di studiare ed eventualmente implementare diversi tipi di euristiche aggiuntive.
+In particolare, una delle euristiche considerate durante il periodo di tirocinio riguarda l'uso che dispositivi quali router e repeater fanno di canali wireless.
+Poich\`e questi sono forniti di numerose antenne, l'uso di un unico canale porterebbe ad una diminuzione della bont\`a del segnale.
+Studiando quindi il funzionamento di diverse tipologie di questi dispositivi si potrebbe implementare un'euristica che aiuti nel raggruppare tutti i vari indirizzi MAC e relative antenne in base al canale utilizzato.
+
+Dopo aver validato la soluzione proposta su reti locali di piccole dimensioni si potrebbe estendere l'utilizzo di questa anche a reti professionali di dimensioni superiori.
+Si potrebbero infatti posizionare una moltitudine di dispositivi implementanti la soluzione proposta nei pressi dei vari access point presenti in una rete di queste dimensioni.
+Le modifiche da effettuare necessarie per il corretto funzionamento comprendono la realizzazione di un unico database a cui i vari dispositivi che effettuano monitoraggio  inviano, in maniera concorrente, la loro visione parziale della topologia e valori di bont\`a del segnale.
+In questo modo \'e possibile analizzare tutto il traffico catturato dai dispositivi e ricostruire in modo dettagliato la topologia di una rete di grandi dimensioni.
+Questo tipo di sviluppo comporta quindi una modifica sia architetturale che implementativa della soluzione proposta.
+
+Estendendo sulla possibile implementazione precedentemente discussa la libreria di ricostruzione topologica potrebbe inoltre essere migliorata implementando un' analisi di frame inviati da un distribution system ad un altro.
+Questo tipo di frame sono utilizzati in reti di tipo wireless distribution system (WDS), un sistema che permette l'interazione tra due reti wireless diverse.
+
+Si possono effettuare anche migliorie per fornire informazioni pi\`u specifiche sui dispositivi all'interno della rete.
+
+Una di queste sarebbe l'implementazione di funzioni che, tramite un database di indirizzi, ricerchino i primi tre ottetti dell'indirizzo MAC, ovvero l' OUI, per stabilire il produttore del dispositivo rilevato.
+
+In aggiunta, concentrandosi sulla rete locale che si vuole analizzare, \'e possibile scoprire servizi offerti dai dispositivi connessi attraverso DNS-based Service Discovery (DNS-SD) \cite{rfc6763}.
+Nelle reti domestiche, dove magari non \'e presente un server DNS centrale, questo tipo di operazione pu\`o essere svolta mediante il protocollo mDNS\cite{rfc6762}.
+
+Le informazioni ottenute possono poi essere utilizzate per modellare il minimo valore SNR in modo specifico al tipo di dispositivo.
+Ad esempio, un dispositivo come una smart TV che annuncia in rete un servizio di streaming, necessita di una connessione molto affidabile rispetto ad altri dispositivi che, magari, non utilizzano costantemente la connessione di rete.
+
+Infine, sempre restando in un ottica di analisi di una rete locale specifica, sarebbe utile fornire un'analisi del traffico TCP della rete in modo da poter analizzare, ad esempio, il numero di ritrasmissioni e pacchetti persi.
