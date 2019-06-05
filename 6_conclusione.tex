@@ -1,1 +1,24 @@
 \chapter{Conclusioni}
+%domestiche
+Negli ultimi anni, a causa della crescita del numero di servizi fruibili in streaming e della popolarit\`a del paradigma cloud computing, fornire una connessione domestica affidabile dal punto di vista prestazionale \'e diventato di fondamentale importanza.
+In aggiunta, la popolarit\`a dei dispositivi mobili ha anche causato un repentino cambio nel mezzo trasmissivo utilizzato per la connessione in favore di soluzioni wireless a discapito del mezzo cablato.
+
+Per far fronte a problematiche riguardanti la connettivit\`a Wi-Fi numerosi produttori di dispositivi di rete stanno implementando nei loro prodotti soluzioni atte al monitoraggio delle risorse collegate ad una rete.
+
+Nel secondo capitolo, dopo aver introdotto i metodi di accesso al mezzo trasmissivo wireless e rilevanti studi riguardanti le prestazioni di questi sistemi, sono stati introdotti alcuni dei software utilizzati per il monitoraggio.
+Le soluzioni presenti attualmente in letteratura hanno per\`o diverse limitazioni.
+In primis la maggior parte dei software disponibili sono a pagamento ed il loro funzionamento \'e ristretto ad apparecchiature professionali, difficilmente trovate in reti locali domestiche.
+In aggiunta, questi tipi di soluzioni sono spesso riservate ad un uso per dispositivi dello stesso produttore.
+Alcuni software open-source forniscono delle metriche sui dispositivi collegati in rete tramite Wi-Fi ma non forniscono una topologia dettagliata della rete, requisito fondamentale per risolvere eventuali malfunzionamenti.
+
+Per questi motivi, nel successivo capitolo si \'e proposta una soluzione per il monitoraggio di reti wireless, in grado di ricostruire una topologia della rete e fornire valori di bont\`a del segnale per ciascun dispositivo collegato.
+Questo risultato \'e stato ottenuto catturando ed analizzando il traffico 802.11 di tutti i dispositivi presenti nelle vicinanze.
+Pur non essendo esente da limitazioni, come la necessit\`a di disconnettere l'interfaccia Wi-Fi da eventuali reti, la soluzione riesce, facendo uso di diverse euristiche, a fornire una visione generale delle reti senza fili presenti nelle vicinanze.
+
+Sono state riportate successivamente le prove di validazione effettuate su diverse reti che si differiscono per numero e tipo di dispositivi presenti oltre a topologia.
+La soluzione proposta, si \'e dimostrata adatta per essere utilizzata su dispositivi con risorse di memoria e calcolo limitati.
+Questo \'e dovuto anche al numero di dispositivi generalmente presenti nelle vicinanze dell'apparecchiatura che effettua la cattura ed analisi del traffico.
+Ponendoci come obiettivo il monitoraggio di reti domestiche, il numero dei dispositivi \'e ,naturalmente, contenuto.
+Le prove effettuate su piccole reti di cui erano note la topologia hanno riportato come la soluzione proposta sia in grado di ricostruire correttamente la topologia di una rete Wi-Fi anche sotto condizioni di basso traffico.
+Per quanto riguarda la bont\`a della connettivit\`a si fornisce una stima basata sulla potenza del segnale ed il rumore di fondo, seguendo gli standard utilizzati dai principali gestori di rete.
+Conoscendo quindi tutti i dispositivi connessi in rete, la loro potenza di segnale e  come essi siano connessi all'access point la soluzione proposta riesce a determinare  quale sia l'effettivo nodo affetto da disservizi.
