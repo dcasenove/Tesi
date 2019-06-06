@@ -26,7 +26,7 @@ Per questi motivi l'elaborato vuol fornire, dopo aver introdotto le tecniche di 
 Nel protocollo 802.11 il meccanismo di accesso al mezzo trasmissivo \'e chiamato distributed coordination function (DCF) \cite{ieee99}.
 Questo metodo di accesso casuale \'e basato sul protocollo di accesso multiplo tramite rilevamento della portante con evitamento delle collisioni (CSMA/CA) in cui i terminali tentano di evitare a priori il verificarsi di collisioni durante la trasmissione.
 La ritrasmissione, in caso di collisione di pacchetti, \'e gestita tramite un algoritmo di backoff esponenziale binario (BEB) che verr\`a presentato in dettaglio successivamente.
-\'E importante notare che lo standard IEEE 802.11 definisce anche un  protocollo opzionale ,chiamato point coordination function (PCF), in cui l'access point ha il compito di coordinare l'accesso al mezzo trasmissivo per evitare collisioni. 
+\'E importante notare che lo standard IEEE 802.11 definisce anche un  protocollo opzionale, chiamato point coordination function (PCF), in cui l'access point ha il compito di coordinare l'accesso al mezzo trasmissivo per evitare collisioni. 
 Questo tipo di meccanismo di accesso non verr\`a trattato per via del suo poco utilizzo.
 
 DCF descrive due tecniche per la trasmissione di pacchetti:
@@ -202,7 +202,7 @@ Questi ultimi sono per\`o meno influenti sul metodo RTS/CTS che si presenta come
 
 Lo studio condotto da Wu et al \cite{wu2002performance} propone un modello basato su quello di Bianchi che tiene per\`o conto del limite di tentativi di ritrasmissione di un frame.
 In aggiunta, viene proposto un miglioramento allo standard 802.11 con l'introduzione di DCF+.
-Questo meccanismo di accesso al metodo di trasmessione \'e introdotto per cercare di sopperire alle problematiche di performance di cui protocolli di livello trasporto soffrono in reti wireless \cite{xylomenos1999tcp}.
+Questo meccanismo di accesso al metodo di trasmissione \'e introdotto per cercare di sopperire alle problematiche di performance di cui protocolli di livello trasporto soffrono in reti wireless \cite{xylomenos1999tcp}.
 In particolare, lo studio si concentra sul risolvere la contesa per il canale di trasmissione che avviene durante lo scambio di dati ed ACK TCP, meccanismo che potrebbe causare collisioni ed un degrado delle prestazioni.
 La soluzione proposta \'e inoltre compatibile con DCF definito dallo standard 802.11, questo vuol dire che in una stessa rete possono coesistere e comunicare stazioni che supportano due metodi di accesso al mezzo trasmissivo diversi.
 

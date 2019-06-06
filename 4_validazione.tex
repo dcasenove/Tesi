@@ -130,7 +130,7 @@ L'ultimo esempio che si riporta in figura \ref{fig:es7} riguarda un'altra rete l
 \end{figure}
 
 \subsubsection{Reti complesse}
-Sebbene la libreria per la ricostruzione della topologia Wi-Fi sia stata sviluppata per un funzionamento su reti locali domestiche sono stati effettuate anche delle prove su reti professionali di medie dimensioni.
+Sebbene la libreria per la ricostruzione della topologia Wi-Fi sia stata sviluppata per un funzionamento su reti locali domestiche sono state effettuate anche delle prove su reti professionali di medie dimensioni.
 In questo caso, poich\`e non si conosce l'effettiva topologia della rete, non si \'e in grado di determinare l'efficacia della soluzione proposta se non constatando la presenza di dispositivi personali collegati.
 Queste prove hanno per\`o mostrato come la libreria sia in grado di distinguere tra diversi SSID annunciati dallo stesso dispositivo di rete, una peculiarit\`a presente in access point di fascia alta.
 
@@ -158,23 +158,21 @@ Il RTT ottenuto nella rete \'e utile per fornire un quadro generale della raggiu
 
 Questa metrica \'e per\`o l'unica utilizzata dalla soluzione proposta per valutare lo stato di connessione di dispositivi cablati, rendendo quindi fondamentale l'uso dell'ARP scan se si desidera conoscere la connettivit\`a di questi terminali.
 
-I valori considerati standard per questo tipo di analisi sono variano tra <1ms e 5ms per quanto riguarda la connessione cablata mentre questa metrica si rileva poco efficace per stimare una connettivit\`a di tipo wireless, poich\`e troppo inconsistente.
+I valori considerati standard per questo tipo di analisi sono <1ms per quanto riguarda la connessione cablata mentre questa metrica si rileva poco efficace per stimare una connettivit\`a di tipo wireless, poich\`e troppo inconsistente.
 
 Per fornire una pi\`u accurata misura della bont\`a del segnale la soluzione proposta, come introdotto nel capitolo precedente, dopo aver ottenuto i parametri di potenza del segnale e rumore di sottofondo, calcola il SNR.
 Questo tipo di metrica, utilizzata dai network manager di tutti i sistemi operativi e software professionali, fornisce una divisione in categorie della bont\`a del segnale.
 
 Poich\`e i valori utilizzati dal calcolo vengono calcolati in base alla potenza del segnale alla scheda di rete che sta effettuando la cattura dei frame, il dispositivo implementante la soluzione proposta deve essere posto in prossimit\`a dell'access point della rete che si vuole monitorare.
 
-Utilizzando la topologia ottenuta dall'analisi dei frame e gli SNR calcolati la libreria \'e in grado di identificare in modo esatto, in caso di problemi di connessione Wi-Fi, tutti i dispositivi affetti.
-Questo \'e possibile sia nel caso in cui il dispositivo sia connesso direttamente all'access point o ad un repeater.
+Utilizzando la topologia ottenuta dall'analisi dei frame ed i SNR calcolati la libreria \'e in grado di identificare in modo esatto, in caso di problemi di connessione Wi-Fi, tutti i dispositivi affetti.
+Questo \'e possibile sia nel caso in cui il dispositivo \'e connesso direttamente all'access point e sia quando il dispositivo \'e connesso ad un repeater.
 
 Nel primo caso, un valore non ottimale del SNR, identifica un problema nel dispositivo stesso poich\`e esso \'e direttamente collegato all'access point.
-
 Nel secondo caso, poich\`e si conosce anche il valore SNR del repeater collegato all'access point, un valore non ottimale in questo dispositivo avr\`a ripercussioni anche sulla connessione dei terminali a lui collegato.
 In questo caso i valori SNR di quest'ultimi si riferiscono al loro collegamento con il repeater.
 
-%In caso di valori SNR particolarmente bassi per un dispositivo, come ad esempio <15db, la libreria pu\`o avvertire con un alert l'utente finale.
-
+In questi modi, se un dispositivo ha un SNR <15db, la sua connessione e quella di  terminali a lui eventualmente connessi vengono considerate affette da disservizi.
 
 %\newpage
 
