@@ -22,6 +22,7 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{fancyref}
+\usepackage[titletoc,title]{appendix}
 
 \usepackage{nameref}
 
@@ -73,6 +74,8 @@
 \author{Daniel Casenove}
 \title{Rilevazione di disservizi nella connettività di rete}
 
+
+
 \begin{document}
 \pagestyle{fancy}
 \fncyfront
@@ -93,9 +96,13 @@
 \begin{abstract}
  
 \end{abstract}
+\pagenumbering{gobble}
+
 \tableofcontents
+%\thispagestyle{empty}
 \fncymain
 \mainmatter
+\pagenumbering{arabic}
 
 \include{1_introduzione}
 \include{2_stato_arte}
@@ -108,4 +115,7 @@
 \emergencystretch=1em
 \printbibliography[heading=bibintoc]
 
+\begin{appendices}
+\input{7_appendice}
+\end{appendices}
 \end{document}
