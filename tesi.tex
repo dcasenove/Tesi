@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper,twoside,openright]{book}
+\documentclass[12pt,a4paper,twoside,openany]{book}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[italian]{babel}
@@ -95,15 +95,16 @@
 
 \begin{abstract}
  
-La repentina crescita di dispositivi connessi ad Internet ed un sempre maggiore uso di servizi in rete rendono di fondamentale importanza strumenti in grado di rilevare malfunzionamenti nella connessione.
-Le attuali soluzioni per il monitoraggio della connettivit\`a sono, per\`o, limitate ad apparecchiature di rete di tipo professionale e non adatte alle sempre pi\`u popolari reti domestiche.
+La repentina crescita di dispositivi connessi ad Internet e un sempre maggiore uso di servizi in rete rendono di fondamentale importanza l'adozione e l'utilizzo strumenti in grado di rilevare malfunzionamenti nella connessione.
+Le attuali soluzioni per il monitoraggio della connettivit\`a non sono, per\`o, adatte alle sempre pi\`u popolari reti domestiche perch\'e prevedono l'impiego di apparecchiature di rete di tipo professionale e, di conseguenza, la configurazione iniziale da parte di personale specializzato.
 
-Lo scopo dell' elaborato \'e quello di progettare ed implementare uno strumento in grado di rilevare disservizi nella connetivit\`a di queste reti.
-In particolare, dopo aver introdotto il funzionamento del mezzo trasmissivo wireless, viene presentata una libreria in grado di analizzare la connettivit\`a di terminali cablati e non.
-La soluzione proposta si \'e dimostrata in grado di ricostruire la topologia Wi-Fi di varie reti domestiche e fornire, per i dispositivi ad esse collegati, metriche di bont\`a del segnale.
-
+Quindi, l'obiettivo di questo lavoro di tirocinio \'e quello di progettare ed implementare uno strumento in grado di rilevare disservizi nella connetivit\`a di reti domestiche.
+In particolare, questo elaborato sviluppa una libreria nel linguaggio C++ in grado di analizzare la connettivit\`a di terminali cablati e non.
+Il processo di validazione, condotto in contesti Wi-Fi domestici con strutture disparate, ha dimostrato che la soluzione proposta \'e in grado di ricostruire la topologia delle reti domestiche e fornire, per i dispositivi ad esse collegati, metriche di bont\`a del segnale come round-trip time e potenza del segnale Wi-Fi.
 
 \end{abstract}
+
+\cleardoublepage
 \pagenumbering{gobble}
 
 \tableofcontents
@@ -119,10 +120,10 @@ La soluzione proposta si \'e dimostrata in grado di ricostruire la topologia Wi-
 \include{5_lavoro_futuro}
 \include{6_conclusione}
 
-\backmatter
+%\backmatter
 \emergencystretch=1em
 \printbibliography[heading=bibintoc]
-
+%\mainmatter
 \begin{appendices}
 \input{7_appendice}
 \end{appendices}

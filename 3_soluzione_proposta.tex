@@ -6,28 +6,72 @@ Si analizza brevemente l'architettura del software sviluppato per poi fornirne u
 L'architettura della soluzione proposta \'e principalmente suddivisa in due parti come mostrato in figura \ref{fig:solproposta}: %FIGURA
 \begin{itemize}
 
-\item una libreria che implementa un'operazione di ARP \cite{rfc826} scan, utilizzata per fornire una metrica del round-trip time (RTT) ed associare ad indirizzi IPv4 nella rete locale i rispettivi indirizzi MAC.
+\item ArpScanner, una libreria che implementa un'operazione di ARP \cite{rfc826} scan, utilizzata per fornire una metrica del round-trip time (RTT) ed associare ad indirizzi IPv4 nella rete locale i rispettivi indirizzi MAC.
 Bench\`e l'utilizzo di questa libreria sia facoltativo, nei capitoli successivi si mostrer\`a come i risultati ottenuti dall'operazione di ARP scan migliorino l'accuratezza della ricostruzione della topologia Wi-Fi.
-\item una libreria che, dopo aver catturato pacchetti di traffico di rete ed ottenuto i risultati dell' ARP scan, analizza i frame ricevuti e li utilizza per ricostruire una topologia della rete Wi-Fi fornendo valori di bont\`a del segnale.
+\item WiFi-Topology, una libreria che, dopo aver catturato pacchetti di traffico di rete ed ottenuto i risultati dell' ARP scan, analizza i frame ricevuti e li utilizza per ricostruire una topologia della rete Wi-Fi fornendo valori di bont\`a del segnale.
 Questa libreria \'e in grado di ricostruire topologie di reti sia in modalit\`a di cattura attiva o da file di cattura.
 \end{itemize}
 
 Le operazioni di cattura di pacchetti in entrambe le librerie sviluppate sono effettuate utilizzando l'API Pcap \cite{pcap}.
 In particolare, nella libreria di ARP scanning vengono catturati frame di tipo Ethernet II mentre nella libreria per la ricostruzione della topologia di una rete i frame catturati sono di tipo 802.11.
-%Perche'
 
 \begin{figure}[!htb]
 	\centering
-	\includegraphics{images/img4.pdf}
+	\includegraphics{images/drawingarchitettura.pdf}%img4.pdf}
 	\caption{Architettura soluzione proposta}
 	\label{fig:solproposta}
 \end{figure}
+
+
+Si discutono ora le strutture logiche delle due librerie sviluppate.
+
+La libreria di ARP scan viene implementata utilizzando due librerie ausiliarie per le operazioni di invio e cattura pacchetti: dnet e libpcap.
+La prima viene utilizzata per inviare i pacchetti ARP nel range di IP della sottorete mentre la seconda per raccogliere le risposte da eventuali dispositivi connessi alla rete.
+Questo tipo di implementazione prevede quindi che il dispositivo sia connesso alla rete che si vuole monitorare e costituisce la parte di monitoraggio attivo della soluzione proposta.
+%I risultati ottenuti da queste operazioni, oltre a fornire misure utili al monitoraggio della rete, vengono poi utilizzati per .
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/drawingarpscanner.pdf}%img4.pdf}
+	\caption{Struttura logica ArpScanner}
+	\label{fig:ArpScanner}
+\end{figure}
+
+
+La libreria per la ricostruzione Wi-Fi, al contrario, effettua monitoraggio delle reti in modo passivo.
+Non viene quindi inviato alcun tipo di pacchetto e le uniche azioni compiute sono quelle di cattura dei frame e la successiva analisi del traffico.
+I risultati ottenuti dall'ARP scan possono essere utilizzati in quest'ultima operazione per aumentare l'accuratezza dei risultati forniti nella ricostruzione della topologia Wi-Fi.
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics{images/drawingwifitopology.pdf}%img4.pdf}
+	\caption{Struttura logica WiFi-Topology}
+	\label{fig:WiFi-Topology}
+\end{figure}
+
+
+Poich\`e si vuole implementare questo tipo di soluzione su dispositivi con risorse di calcolo e memoria limitate si \'e prestata particolare attenzione al tipo di strutture utilizzate ed operazioni effettuate dalle librerie sviluppate.
+In aggiunta, la soluzione proposta vuole limitare l'impatto prestazionale a cui viene sottoposta la rete durante le operazioni di monitoraggio.
+
+Essendo la libreria ArpScanner l'unica ad implementare un tipo di monitoraggio attivo, l'unica operazione che pu\`o avere un impatto sulle prestazioni di rete \'e quella di invio dei pacchetti ARP.
+Questa libreria non present\`a per\`o particolari richieste di calcolo o memoria dato il numero generalmente ristretto di dispositivi appartenenti ad una rete domestica ed ai pochi dati associati ad essi mediante l'operazione di arp scanning.
+
+Al contrario, la libreria WiFi-Topology non ha alcun impatto sulle prestazioni della rete in esame poich\`e il tipo di monitoraggio effettuato \'e puramente passivo.
+Il grande numero di pacchetti che viene catturato ed il numero di device presenti nelle vicinanze rendono questo tipo di analisi pi\`u dispendiosa dal punto di vista della memoria utilizzata.
+
+\newpage
+%Perche'
 
 
 \section{Implementazione}
 Si presentano brevemente, prima dei dettagli implementativi della libreria per la ricostruzione topologica della rete, il funzionamento della libreria utilizzata per la cattura dei pacchetti Pcap e quella implementata per effettuare ARP scanning.
 
 Le librerie sono state sviluppate utilizzando il linguaggio di programmazione C++, un linguaggio nato come miglioramento del C, che permette l'uso del paradigma ad oggetti ed il controllo dell'utente della gestione della memoria.
+Queste due caratteristiche hanno permesso di utilizzare puntatori per l'analisi dei frame catturati tramite la libreria libpcap e, allo stesso tempo, incapsulare i risultati dell'analisi in appropriati oggetti.
+
+Inoltre, l'utilizzo del linguaggio C++ permette l'uso senza wrapper della libreria di cattura pacchetti libpcap, poich\`e questa \'e scritta in C.
+
+
  %questo ha permesso di combinare l'uso di costrutti ad alto livello come gli oggetti e l'accesso ai frame catturati tramite puntatori.
 
 \subsection{Pcap}
