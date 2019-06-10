@@ -25,7 +25,7 @@ In particolare, nella libreria di ARP scanning vengono catturati frame di tipo E
 
 Si discutono ora le strutture logiche delle due librerie sviluppate.
 
-La libreria di ARP scan viene implementata utilizzando due librerie ausiliarie per le operazioni di invio e cattura pacchetti: dnet e libpcap.
+La libreria di ARP scan in figura \ref{fig:ArpScanner} viene implementata utilizzando due librerie ausiliarie per le operazioni di invio e cattura pacchetti: dnet e libpcap.
 La prima viene utilizzata per inviare i pacchetti ARP nel range di IP della sottorete mentre la seconda per raccogliere le risposte da eventuali dispositivi connessi alla rete.
 Questo tipo di implementazione prevede quindi che il dispositivo sia connesso alla rete che si vuole monitorare e costituisce la parte di monitoraggio attivo della soluzione proposta.
 %I risultati ottenuti da queste operazioni, oltre a fornire misure utili al monitoraggio della rete, vengono poi utilizzati per .
@@ -38,7 +38,7 @@ Questo tipo di implementazione prevede quindi che il dispositivo sia connesso al
 \end{figure}
 
 
-La libreria per la ricostruzione Wi-Fi, al contrario, effettua monitoraggio delle reti in modo passivo.
+La libreria per la ricostruzione Wi-Fi in figura \ref{fig:WiFi-Topology}, al contrario, effettua monitoraggio delle reti in modo passivo.
 Non viene quindi inviato alcun tipo di pacchetto e le uniche azioni compiute sono quelle di cattura dei frame e la successiva analisi del traffico.
 I risultati ottenuti dall'ARP scan possono essere utilizzati in quest'ultima operazione per aumentare l'accuratezza dei risultati forniti nella ricostruzione della topologia Wi-Fi.
 
@@ -230,7 +230,7 @@ L'indirizzo \'e formato da una struttura di 48 bit divisa in 6 ottetti, come mos
 Per mantenere l'unicit\`a tutte le schede di rete prodotte \'e stato introdotto uno standard, chiamato EUI-48 e gestito dalla IEEE, che divide l'indirizzo MAC in due parti:
 \begin{itemize}
 	\item Organisationally Unique Identifier (OUI): identifica unicamente un produttore di schede di rete ed \'e assegnato dalla IEEE.
-	\item Network Interface Controller (NIC): identifica unicamente una determinata scheda di rete e viene assegnata dal prodottore.
+	\item Network Interface Controller (NIC): identifica unicamente una determinata scheda di rete e viene assegnata dal produttore.
 \end{itemize}
 
 \begin{figure}[!htb]
@@ -250,7 +250,7 @@ La differenziazione del tipo di trasmissione in unicast e multicast avviene in m
 Un valore pari a 0 equivale ad una trasmissione unicast mentre un valore pari ad 1 una trasmissione di tipo multicast.
 Infine, l'indirizzo di broadcast \'e ottenuto ponendo un valore pari ad 1 ad ogni bit dell'indirizzo MAC.
 
-Come visto precedentemente, un MAC header \'e costituito da quattro indirizzi MAC il cui valore e significato varia in base al tipo di frame ed ai valori To DS e From DS.
+Come visto precedentemente, un MAC header \'e costituito da quattro indirizzi MAC il cui valore e significato variano in base al tipo di frame ed ai valori To DS e From DS.
 Gli indirizzi possono essere dei seguenti tipi:
 \begin{itemize}
 	\item Receiver Address (RA): indirizzo della stazione che riceve il frame.

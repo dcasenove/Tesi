@@ -7,7 +7,7 @@ La validazione della libreria sviluppata \'e stata effettuata su effettive reti 
 Questa scelta ha quindi reso possibile la verifica della bont\`a delle euristiche proposte su una quantit\`a ed un tipo di traffico molto disparati.
 In aggiunta, la conoscenza della topologia della rete, ha permesso di comparare i risultati ottenuti mediante l'utilizzo della libreria con la struttura effettiva della rete.
 
-I risultati ottenuti verranno presentati grafi realizzati usando Graphviz \cite{graphviz} in cui vengono evidenziate le topologie delle reti prese in analisi.
+I risultati ottenuti verranno presentati come grafi realizzati usando Graphviz \cite{graphviz} in cui vengono evidenziate le topologie delle reti prese in analisi.
 Durante la validazione del lavoro svolto \'e stato di fondamentale utilit\`a anche il software Wireshark \cite{wireshark}.
 Questo analizzatore di pacchetti open-source ha permesso, insieme alla conoscenza delle reti su cui si sono eseguite le prove, di ispezionare ogni pacchetto alla ricerca di possibili inconsistenze con la soluzione proposta. 
 
@@ -41,7 +41,7 @@ La topologia di questa rete \'e relativamente banale ed \'e costituita da due di
 \end{figure}
 
 
-Nel grafo \ref{fig:es2} si mostra l'evoluzione topologica della stessa rete in un diverso momento della giornata, in questo caso si pu\`o notare la presenza di diversi nuovi dispositivi collegati.
+Nel grafo \ref{fig:es2} si mostra l'evoluzione topologica della stessa rete in un diverso momento della giornata, in questo caso si pu\`o notare la presenza di nuovi dispositivi collegati.
 %nonna3.pcap
 \begin{figure}[!h]
 	\centering
@@ -87,7 +87,7 @@ Questo tipo di cattura mostra anche come la soluzione proposta sia in grado di i
 
 \subsubsection{Reti con repeater}
 
-Per la validazione su reti con topologia pi\`u complessa sono stati effettuate delle prove con diversi repeater Wi-Fi.
+Per la validazione su reti con topologia pi\`u complessa sono state effettuate delle prove con diversi repeater Wi-Fi.
 
 Il primo esempio che si riporta in figura \ref{fig:es5} riguarda l'introduzione di un repeater in una rete gi\`a presentata.
 Il traffico analizzato mostra come, in questo caso, il repeater agisca in maniera "trasparente", aggiungendo il suo indirizzo MAC come trasmettitore nei frame riguardanti i dispositivi a lui connesso.
@@ -163,7 +163,7 @@ I valori considerati standard per questo tipo di analisi sono <1ms per quanto ri
 Per fornire una pi\`u accurata misura della bont\`a del segnale la soluzione proposta, come introdotto nel capitolo precedente, dopo aver ottenuto i parametri di potenza del segnale e rumore di sottofondo, calcola il SNR.
 Questo tipo di metrica, utilizzata dai network manager di tutti i sistemi operativi e software professionali, fornisce una divisione in categorie della bont\`a del segnale.
 
-Poich\`e i valori utilizzati dal calcolo vengono calcolati in base alla potenza del segnale alla scheda di rete che sta effettuando la cattura dei frame, il dispositivo implementante la soluzione proposta deve essere posto in prossimit\`a dell'access point della rete che si vuole monitorare.
+Poich\`e i valori utilizzati vengono calcolati in base alla potenza del segnale alla scheda di rete che sta effettuando la cattura dei frame, il dispositivo implementante la soluzione proposta deve essere posto in prossimit\`a dell'access point della rete che si vuole monitorare.
 
 Utilizzando la topologia ottenuta dall'analisi dei frame ed i SNR calcolati la libreria \'e in grado di identificare in modo esatto, in caso di problemi di connessione Wi-Fi, tutti i dispositivi affetti.
 Questo \'e possibile sia nel caso in cui il dispositivo \'e connesso direttamente all'access point e sia quando il dispositivo \'e connesso ad un repeater.
